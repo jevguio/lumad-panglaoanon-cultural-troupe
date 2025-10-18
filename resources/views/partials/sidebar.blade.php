@@ -77,9 +77,13 @@ background-color: {{ $bgColor }} !important;">
                 data-link="{{ route('manage-costume') }}">
                 <a href="{{ route('manage-costume') }}">Manage Costume</a>
             </li>
-            <li data-link="#"><a href="#">Manage Costume</a></li>
-            <li data-link="#"><a href="#">Event History</a></li>
-            <li data-link="#"><a href="#">Event Highlights</a></li>
+            
+            <li class="{{ request()->is('view/events/history') ? 'active' : '' }}" data-link="{{ route('my.schedule') }}">
+                <a href="{{ route('view.events.history') }}">Event History</a>
+            </li>
+            <li class="{{ request()->is('view/events/hignlights') ? 'active' : '' }}" data-link="{{ route('my.schedule') }}">
+                <a href="{{ route('view.events.highlights') }}">Events Highlights</a>
+            </li>
             @endif
         </ul>
     </nav>

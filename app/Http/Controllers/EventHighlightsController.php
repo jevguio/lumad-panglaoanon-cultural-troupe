@@ -16,6 +16,19 @@ class EventHighlightsController extends Controller
         $otherEvents = Event::where('is_show_event', false)->with('highlights.files')->get();
         return view('admin.highlights.index', compact('showEvents', 'otherEvents'));
     }
+    public function history()
+    {
+        $showEvents = Event::where('is_show_event', true)->with('highlights.files')->get();
+        $otherEvents = Event::where('is_show_event', false)->with('highlights.files')->get();
+        return view('performer.history.index', compact('showEvents', 'otherEvents'));
+    }
+
+    public function highlights()
+    {
+        $showEvents = Event::where('is_show_event', true)->with('highlights.files')->get();
+        $otherEvents = Event::where('is_show_event', false)->with('highlights.files')->get();
+        return view('performer.highlights.index', compact('showEvents', 'otherEvents'));
+    }
 
     public function store(Request $request)
     {

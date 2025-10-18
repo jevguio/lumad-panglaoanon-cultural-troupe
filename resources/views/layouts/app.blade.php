@@ -16,7 +16,7 @@
 
     <!-- Scripts -->
     @viteReactRefresh
-    @vite(['resources/sass/app.scss',   'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -28,7 +28,12 @@
             @include('partials.sidebar')
         @endauth
         <div class="content @auth ml-20 shifted @endauth ">
-            <button id="toggleBtnOn" class="btn orange hidden">☰</button>
+
+            @auth
+
+                <button id="toggleBtnOn" class="btn orange hidden">☰</button>
+
+            @endauth
             @yield('content')
         </div>
         @auth

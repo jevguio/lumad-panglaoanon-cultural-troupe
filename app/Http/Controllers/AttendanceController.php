@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Event;
@@ -10,12 +11,21 @@ class AttendanceController extends Controller
     public function index()
     {
         // Only admin or manager
-        if (!in_array(auth()->user()->type, ['admin', 'manager'])) {
-            abort(403, 'Unauthorized');
+        $events = Event::with('performers')->get();
+
+        if (! in_array(auth()->user()->type, ['admin', 'manager'])) {
+            $events = $events->map(function ($event) {
+                $event->performers = $event->performers->where('id', auth()->id());
+
+                return $event;
+            });
+
+            return view('performer.attendance.index', compact('events'));
         }
 
-        $events = Event::with('performers')->get();
-        Log::info($events);
+        // Log the event data for admin/manager
+        Log::info('All Events Data:', $events->toArray());
+
         return view('admin.attendance.index', compact('events'));
     }
 
