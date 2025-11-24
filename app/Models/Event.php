@@ -9,7 +9,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'mode', 'status', 'is_show_event', 'selected_performers', 'description', 'required_performers', 'time', 'date', 'type', 'venue', 'client'];
+    protected $fillable = ['title', 'mode', 'status', 'is_show_event',  'description', 'required_performers', 'time', 'date', 'type', 'venue', 'client'];
 
     protected $casts = [
         'selected_performers' => 'array',
@@ -17,7 +17,7 @@ class Event extends Model
  
     public function selectedPerformers()
     {
-        return $this->belongsToMany(User::class, 'event_user');
+        return $this->belongsToMany(User::class, 'event_user')->where("event_user.status","=","selected");
     }
     public function schedules()
     {

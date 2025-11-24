@@ -60,9 +60,31 @@
             </div>
         </div>
         <h3>SHOW EVENTS</h3>
-        <div class="grid">
+        <div class="grid grid-cols-3">
 
             @foreach ($showEvents as $event)
+            <div class="card" data-id="{{ $event->id }}">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-weight:700">EVENT ID: {{ $event->title }}</div>
+                    <div style="font-size:12px">Mode: {{ $event->mode }}</div>
+                </div>
+
+                <div style="margin-top:12px;display:flex;gap:8px">
+                    <button class="btn large orange" onclick="viewEvent({{ $event->id }})">VIEW EVENT</button>
+                    <button class="btn large green" onclick="openUpdateModal({{ $event->id }})">UPDATE</button>
+                    <button class="btn large red" onclick="openDeleteModal({{ $event->id }})">REMOVE</button>
+
+                </div>
+
+            </div>
+            @endforeach
+        </div>
+
+
+        <h3>OTHER EVENTS</h3>
+        <div class=" grid grid-cols-3 ">
+
+            @foreach ($otherEvents as $event)
                 <div class="card" data-id="{{ $event->id }}">
                     <div style="display:flex;justify-content:space-between;align-items:center">
                         <div style="font-weight:700">EVENT ID: {{ $event->title }}</div>
@@ -70,38 +92,17 @@
                     </div>
 
                     <div style="margin-top:12px;display:flex;gap:8px">
+                        {{-- <button class="btn green set-status" data-status="available">AVAILABLE</button>
+                    <button class="btn red set-status" data-status="unavailable">UNAVAILABLE</button>
+                    <button class="btn orange set-status" data-status="cancelled">CANCEL</button> --}}
+
                         <button class="btn large orange" onclick="viewEvent({{ $event->id }})">VIEW EVENT</button>
                         <button class="btn large green" onclick="openUpdateModal({{ $event->id }})">UPDATE</button>
                         <button class="btn large red" onclick="openDeleteModal({{ $event->id }})">REMOVE</button>
-
                     </div>
 
                 </div>
             @endforeach
-        </div>
-
-        <div class="grid">
-
-            <div class="other-event">
-                <h3>OTHER EVENTS</h3>
-
-                @foreach ($otherEvents as $event)
-                <div class="card" data-id="{{ $event->id }}">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <div style="font-weight:700">EVENT ID: {{ $event->title }}</div>
-                        <div style="font-size:12px">Mode: {{ $event->mode }}</div>
-                    </div>
-
-                    <div style="margin-top:12px;display:flex;gap:8px">
-                        <button class="btn green set-status" data-status="available">AVAILABLE</button>
-                        <button class="btn red set-status" data-status="unavailable">UNAVAILABLE</button>
-                        <button class="btn orange set-status" data-status="cancelled">CANCEL</button>
-                    </div>
-
-                    <button class="btn large" onclick="viewEvent({{ $event->id }})">VIEW EVENT</button>
-                </div>
-                @endforeach
-            </div>
         </div>
     </div>
     <template id="toast-template">
@@ -115,7 +116,7 @@
     <script>
         const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        const modal = document.getElementById("eventModal3"); 
+        const modal = document.getElementById("eventModal3");
 
         // =================== UPDATE ===================
         function openUpdateModal(id) {
@@ -255,10 +256,10 @@
                     html += `<p><strong>Required Performers:</strong> ${ev.required_performers}</p>`;
                     html += `<p><strong>Description:</strong> ${ev.description}</p>`;
 
-                    if (ev.selected_performers && ev.selected_performers.length) {
+                    if (ev.selectedPerformers && ev.selectedPerformers.length) {
                         html += `<p><strong>Selected Performers:</strong></p>`;
-                        html += ev.selected_performers.map(p =>
-                            `<span style='background:#3ab76a;color:#fff;padding:4px 8px;border-radius:6px;margin-right:6px'>${p}</span>`
+                        html += ev.selectedPerformers.map(p =>
+                            `<span style='background:#3ab76a;color:#fff;padding:4px 8px;border-radius:6px;margin-right:6px'>${p}</span>` 
                         ).join('');
                     }
 

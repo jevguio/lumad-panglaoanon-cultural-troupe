@@ -113,7 +113,7 @@ public function destroy(Event $event)
             'status' => $event->status,
             'required_performers' => $event->required_performers,
             'description' => $event->description,
-            'selected_performers' => $event->selectedPerformers->pluck('name'), // return only names
+            'selectedPerformers' => $event->selectedPerformers->pluck('name'), // return only names
         ]);
     }
 
