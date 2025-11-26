@@ -4,34 +4,33 @@
     <div class="container">
         <h2 class="mb-4 text-danger">PERFORMER ATTENDANCE</h2>
 
-        @foreach ($events as $event)
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <b>Event ID: {{ $event->id }}</b> - {{ $event->title ?? 'Untitled' }}
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-bordered mb-0">
-                        <thead class="table-info">
-                            <tr>
-                                <th>Performer ID</th>
-                                <th>Name</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        <div class="  mb-4">
+            <div class=" p-0">
+                <table class="table table-bordered mb-0" style="background-color:  #F2BB55;">
+                    <thead class=" "  style="background-color: #F2BB55;">
+                        <tr style="background-color:  #F2BB55;">
+                            <th  style="background-color:  #F2BB55;">Performer ID</th>
+                            <th style="background-color:  #F2BB55;">Name</th>
+                            <th style="background-color:  #F2BB55;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($events as $event)
                             @foreach ($event->performers as $performer)
-                                <tr>
-                                    <td>Performer {{ $performer->id }}</td>
-                                    <td>{{ $performer->name }}</td>
-                                    <td> 
-                                        {{$performer->pivot->attendance}}
-                                    </td>
-                                </tr>
+                                @if ($performer->id == Auth::user()->id)
+                                    <tr style="background-color: #F2BB55;">
+                                        <td>Performer {{ $performer->id }}</td>
+                                        <td>{{ $performer->name }}</td>
+                                        <td>
+                                            {{ $performer->pivot->attendance }}
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        @endforeach
+        </div>
     </div>
 @endsection

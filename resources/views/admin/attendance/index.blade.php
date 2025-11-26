@@ -13,7 +13,7 @@
                     <table class="table table-bordered mb-0">
                         <thead class="table-info">
                             <tr>
-                                <th>Performer ID</th>
+                                <th>Event IDD</th>
                                 <th>Name</th>
                                 <th>Confirmation</th>
                             </tr>

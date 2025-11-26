@@ -133,19 +133,22 @@
     box-shadow: 2px 0 6px rgba(0, 0, 0, .2);
     margin: 0;
     transition: all 0.3s ease-in-out;
+    position: relative;
   }
   
   .sidebar.collapsed {
-    width: 0;
-    padding: 0;
-    overflow: hidden;
+    width:70px;
+    padding: 0; 
+  }
+  
+  .sidebar.collapsed span{
+    display: none;
   }
   .hidden{
     display: none;
   }
   .content {
-    flex: 1;
-    padding: 28px 36px;
+    flex: 1; 
     overflow: auto;
     transition: all 0.3s ease-in-out;
   }
@@ -194,8 +197,7 @@
   .avatar {
     width: 56px;
     height: 56px;
-    border-radius: 50%;
-    background: #111;
+    border-radius: 50%; 
   }
   
   .name {
@@ -255,7 +257,12 @@
     border: 0;
     cursor: pointer;
   }
-  
+  .main{
+    background-color:  rgba(200,200,200,0.5);
+  }
+  .main:hover{
+    background-color:  rgba(200, 200, 200, 0.76);
+  }
   .btn.green {
     background: #3ab76a;
     color: #fff;

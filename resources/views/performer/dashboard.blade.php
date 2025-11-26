@@ -5,7 +5,7 @@
     <div class=" py-4" style="width: 100%;">
 
         {{-- Welcome Section --}}
-        <div class="p-5 mb-4 bg-danger text-white rounded-3 text-center">
+        <div class="p-5 mb-4  text-white rounded-3 text-center" style="background-color: #D48C06;">
             <h1 class="fw-bold">Welcome to TroupeSync</h1>
             <p>Manage events, costumes, and more.</p>
             <div class="d-flex justify-content-center gap-3">

@@ -22,7 +22,7 @@
 
                     <div style="margin-top:12px;display:flex;gap:8px">
                         <button class="btn green set-status" data-status="available">AVAILABLE</button>
-                        <button class="btn red set-status" data-status="unavailable">UNAVAILABLE</button>
+                        <button class="btn red set-status"  data-status="unavailable">UNAVAILABLE</button>
                         <button class="btn orange set-status" data-status="cancelled">CANCEL</button>
                     </div>
 

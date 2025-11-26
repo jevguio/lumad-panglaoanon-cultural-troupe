@@ -25,15 +25,51 @@
 
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="container2 ">
-            @include('partials.sidebar')
+            @if (request()->is('dashboard'))
+                @include('partials.sidebarClose')
+            @else
+                @include('partials.sidebar')
+            @endif
         @endauth
         <div class="content @auth ml-20 shifted @endauth ">
 
-            @auth
+            @if (request()->is('dashboard'))
+                <div
+                    style="position: sticky; top:0; width: 100%; padding: 10px; background-color: white; z-index: 100; display: flex;">
+                    <div style="display: flex; flex: 1; padding: 10px;">
+                        <img src="{{ asset('icons/avatar.png') }}" style="width: 40px;" />
+                        <a href="{{ route('dashboard') }}"
+                            style="text-decoration: none; font-weight: bold; padding-left: 10px; color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">{{ Auth::user()->type }}
+                            Dashboard
+                        </a>
+                    </div>
+                    <div style="display: flex;">
 
-                <button id="toggleBtnOn" class="btn orange hidden">☰</button>
+                        <a href="{{ route('dashboard') }}"
+                            style="text-decoration: none; padding:10px;  color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">
+                            Home
+                        </a>
 
-            @endauth
+                        <a href="{{ route('events.index') }}"
+                            style="text-decoration: none;  padding:10px;  color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">
+                            Events
+                        </a>
+                        <a href="{{ route('costume.status') }}"
+                            style="text-decoration: none;   padding:10px; color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">
+                        </a>
+                        <a href="{{ route('users.index') }}"
+                            style="text-decoration: none;   padding:10px; color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">
+                            Members
+                        </a>
+                        <div style="display: flex; border: black 1px solid; padding: 5px; margin: 10px;">
+
+                            <input type="text" placeholder="Search in site" style="border: none;">
+                            <button style="border: none; background-color: transparent;">🔍︎</button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @yield('content')
         </div>
         @auth
@@ -83,11 +119,26 @@
                 }
             });
         });
-        const toggleBtnOn = document.querySelector("#toggleBtnOn");
         document.getElementById("toggleBtnOn").addEventListener("click", function() {
             const sidebar = document.querySelector(".sidebar");
             const container = document.querySelector(".container");
+            const logout = document.querySelector(".logout");
+            const targ = document.querySelector(".targ");
+            const targMenu = document.querySelector(".targMenu");
+            const head = document.getElementById("headProf");
+            const targ2 = document.querySelector(".targ2");
+            const toggleBtnOn = document.querySelector("#toggleBtnOn");
 
+            targ2.classList.toggle("hidden");
+            logout.classList.toggle("hidden");
+            targ.classList.toggle("hidden");
+            targMenu.classList.toggle("hidden");
+            head.classList.toggle("hidden");
+            if (head.style.display == "flex") {
+                head.style.display = "none"
+            } else {
+                head.style.display = "flex"
+            }
             sidebar.classList.toggle("collapsed");
             container.classList.toggle("shifted");
             toggleBtnOn.classList.toggle("hidden");
@@ -96,12 +147,28 @@
 
         function toggleBtnOff() {
             const sidebar = document.querySelector(".sidebar");
+            const toggleBtnOn = document.querySelector("#toggleBtnOn");
             const container = document.querySelector(".container");
-            console.log(toggleBtnOn);
+            const logout = document.querySelector(".logout");
+            const targ = document.querySelector(".targ");
+            const targMenu = document.querySelector(".targMenu");
+            const head = document.getElementById("headProf");
+            const targ2 = document.querySelector(".targ2");
 
+            targ2.classList.toggle("hidden");
+            logout.classList.toggle("hidden");
+            targ.classList.toggle("hidden");
+            targMenu.classList.toggle("hidden");
+            head.classList.toggle("hidden");
+            if (head.style.display == "flex") {
+                head.style.display = "none"
+            } else {
+                head.style.display = "flex"
+            }
             sidebar.classList.toggle("collapsed");
             container.classList.toggle("shifted");
             toggleBtnOn.classList.toggle("hidden");
+            console.log(toggleBtnOn);
         }
     </script>
 

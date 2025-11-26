@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CostumeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
@@ -16,6 +17,7 @@ Route::get('/', function () {
 
 Route::middleware(['guest'])->group(function () {
     Auth::routes();
+    Route::get('/login', [DashboardController::class, 'loginShow'])->name('login');
 });
 // Protected routes
 Route::middleware(['auth'])->group(function () {
