@@ -37,10 +37,10 @@ class SendEventReminders extends Command
                 Log::info($user);
                 if ($diffDays > 0) {
                     Mail::to($user->email)->send(new EventCountdownMail($event, $diffDays));
-                    $this->info('Event Countdown Mail Reminders sent to '.$user->email.'!');
+                    Log::info('Event Countdown Mail Reminders sent to '.$user->email.'!');
                 } elseif ($diffDays === 0) {
                     Mail::to($user->email)->send(new EventTodayMail($event));
-                    $this->info('Event Today Mail Reminders sent to '.$user->email.'!');
+                    Log::info('Event Today Mail Reminders sent to '.$user->email.'!');
                 }
             }
         }
