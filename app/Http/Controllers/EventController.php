@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -15,9 +16,13 @@ class EventController extends Controller
 
         return view('admin.events.performer-availability', compact('events'));
     }
+
     public function store(Request $request)
     {
+        
+        Log::info($request);
         $request->validate([
+            'title' => 'required|string',
             'client' => 'required',
             'venue' => 'required',
             'type' => 'required',
@@ -25,13 +30,44 @@ class EventController extends Controller
             'time' => 'required',
             'status' => 'required',
             'performers' => 'required|numeric',
-            'description' => 'nullable'
+            'is_show_event' => 'nullable',
+            'description' => 'nullable',
         ]);
-    
-        Event::create($request->all());
-    
+
+        // $request->validate([
+        //     'title' => 'required|string',
+        //     'client' => 'required|string',
+        //     'venue' => 'required|string',
+        //     'type' => 'required|string',
+        //     'date' => 'required|date',
+        //     'time' => 'required',
+        //     'status' => 'required|string',
+        //     'required_performers' => 'required|numeric',
+        //     'description' => 'nullable|string',
+        //     'is_show_event' => 'required|boolean',
+        //     'mode' => 'nullable|string',
+        // ]);
+        Log::info($request);
+        $ev = Event::create([
+            'title' => $request->title,
+            'client' => $request->client,
+            'venue' => $request->venue,
+            'type' => $request->type,
+            'date' => $request->date,
+            'time' => $request->time,
+            'status' => $request->status,
+            'required_performers' => $request->performers,
+            'description' => $request->description,
+            'is_show_event' => $request->is_show_event=='on' ?? false,
+            'mode' => $request->mode ?? 'manual',
+        ]);
+
+        Log::info($ev);
+
         return back()->with('success', 'Event added successfully.');
     }
+    
+
     public function performerHistory()
     {
         $events = User::with('attendedEvents')->get();

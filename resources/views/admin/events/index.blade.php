@@ -120,10 +120,14 @@
             <div class="modal2">
                 <span class="close-btn" onclick="closeModal2()">✖</span>
 
-                <h3>EVENT 4</h3>
+                <h3>CREATE EVENT</h3>
 
                 <form id="eventForm" method="POST" action="{{ route('events.store') }}">
                     @csrf
+                    <div class="form-group">
+                        <label>Title:</label>
+                        <input type="text" name="title" placeholder="Enter event title" required>
+                    </div>
 
                     <div class="form-group">
                         <label>Client:</label>
@@ -141,6 +145,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label>Is Show:</label>
+                        <input type="checkbox" name="is_show_event" >
+                    </div>
+
+                    <div class="form-group">
                         <label>Date:</label>
                         <input type="date" name="date">
                     </div>
@@ -152,7 +161,11 @@
 
                     <div class="form-group">
                         <label>Status:</label>
-                        <input type="text" name="status" placeholder="Enter event status">
+                        <select name="status" required>
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
