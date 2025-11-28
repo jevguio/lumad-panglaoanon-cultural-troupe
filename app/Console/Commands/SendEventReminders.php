@@ -1,35 +1,40 @@
 <?php
-namespace App\Console\Commands;
-
-use Illuminate\Console\Command;
-use App\Models\Event;
 use Carbon\Carbon;
-use App\Notifications\EventReminderNotification;
+use App\Models\Event;
+use Illuminate\Console\Command;
 
 class SendEventReminders extends Command
 {
     protected $signature = 'events:send-reminders';
-    protected $description = 'Send email reminders to assigned performers for tomorrow’s events';
+    protected $description = 'Send reminders to selected performers';
 
     public function handle()
     {
-        $tomorrow = Carbon::tomorrow()->toDateString();
+        $today = Carbon::today();
 
-        $events = Event::where('date', $tomorrow)
-            ->whereHas('performers', function ($q) {
-                $q->where('event_user.status', 'selected');
-            })
-            ->with(['performers' => function ($q) {
+        // Number of days before event to start countdown
+        $countdownDays = [3, 2, 1]; // you can adjust
+
+        $events = Event::with(['performers' => function($q) {
                 $q->where('event_user.status', 'selected');
             }])
             ->get();
 
         foreach ($events as $event) {
+            $eventDate = Carbon::parse($event->date);
+            $diffDays = $today->diffInDays($eventDate, false); // negative if past
+
             foreach ($event->performers as $user) {
-                $user->notify(new EventReminderNotification($event));
+                if (in_array($diffDays, $countdownDays)) {
+                    // Countdown reminder
+                    $user->notify(new \App\Notifications\EventCountdownNotification($event, $diffDays));
+                } elseif ($diffDays === 0) {
+                    // Today reminder
+                    $user->notify(new \App\Notifications\EventTodayNotification($event));
+                }
             }
         }
 
-        $this->info("Reminders sent for tomorrow's events.");
+        $this->info('Reminders sent successfully!');
     }
 }
