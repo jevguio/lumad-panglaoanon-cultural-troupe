@@ -3,6 +3,7 @@
 @section('content')
     <div style=" padding: 10px 50px; ">
         <h1>EVENT SCHEDULE</h1>
+        <button onclick="openModal()">ADD EVENT</button>
         <div>
             <div id="updateModal"
                 style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:1000">
@@ -112,11 +113,84 @@
                 style="position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:10px 14px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.2)">
                 Updated</div>
         </template>
+
+
+        <!-- Modal -->
+        <div class="modal-bg" id="eventModal4">
+            <div class="modal2">
+                <span class="close-btn" onclick="closeModal2()">✖</span>
+
+                <h3>EVENT 4</h3>
+
+                <form id="eventForm" method="POST" action="{{ route('events.store') }}">
+                    @csrf
+
+                    <div class="form-group">
+                        <label>Client:</label>
+                        <input type="text" name="client" placeholder="Enter event client">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Venue:</label>
+                        <input type="text" name="venue" placeholder="Enter event venue">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type:</label>
+                        <input type="text" name="type" placeholder="Enter event type">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date:</label>
+                        <input type="date" name="date">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Time:</label>
+                        <input type="time" name="time">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <input type="text" name="status" placeholder="Enter event status">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Performers:</label>
+                        <input type="number" name="performers" placeholder="Enter number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea name="description" placeholder="Enter event description"></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-cancel" onclick="closeModal()">CANCEL</button>
+                        <button type="submit" class="btn btn-add">ADD EVENT</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 
 @push('scripts')
     <script>
+        function openModal() {
+            document.getElementById("eventModal4").style.display = "flex";
+        }
+
+        function closeModal2() {
+            document.getElementById("eventModal4").style.display = "none";
+        }
+
+        // Close when clicking outside
+        document.getElementById("eventModal4").addEventListener("click", function(e) {
+            if (e.target === this) {
+                closeModal2();
+            }
+        });
         const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         const modal = document.getElementById("eventModal3");

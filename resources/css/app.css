@@ -215,8 +215,95 @@
     border-radius: 6px;
     margin-bottom: 6px;
     cursor: pointer;
+  } 
+  body {
+      font-family: Arial, sans-serif;
   }
-  
+
+  /* Modal Background */
+  .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+  }
+
+  /* Modal Box */
+  .modal2 {
+      background: white;
+      width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 15px;
+      border-radius: 10px;
+      position: relative;
+  }
+
+  .modal2 h3 {
+      text-align: center;
+      margin-bottom: 10px;
+  }
+
+  /* Close Button */
+  .close-btn {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      font-size: 18px;
+      cursor: pointer;
+  }
+
+  /* Form */
+  .form-group {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+  }
+
+  .form-group label {
+      width: 130px;
+      font-weight: bold;
+  }
+
+  .form-group input,
+  .form-group textarea {
+      flex: 1;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #999;
+  }
+
+  textarea {
+      resize: none;
+      height: 80px;
+  }
+
+  /* Buttons */
+  .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+  }
+
+  .btn {
+      border: none;
+      padding: 6px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+  }
+
+  .btn-cancel {
+      background: #d35b5b;
+      color: white;
+  }
+
+  .btn-add {
+      background: #2f3b4c;
+      color: white;
+  } 
   nav li.active {
     background: rgba(0, 0, 0, .08);
   }

@@ -79,7 +79,7 @@
         <h3 id="events" class="text-center mb-3">Upcoming Events</h3>
         <div class=" justify-content-between  align-items-center mb-3" style="padding:0px 50px; text-align: center;">
             <p class="mb-0">Stay on top of scheduled events</p>
-            <a href="{{ route('events.create') }}" class="btn btn-dark"  style="margin:10px;">Add Event</a>
+            <a href="{{ route('events.index') }}" class="btn btn-dark"  style="margin:10px;">Add Event</a>
         </div>
         <div class="row" style="padding:0px 50px;">
             @forelse($events as $event)

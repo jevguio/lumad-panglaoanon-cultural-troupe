@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,72 +10,102 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
     public function performerAvailability()
-{
-    $events = Event::with('selectedPerformers')->get();
+    {
+        $events = Event::with('selectedPerformers')->get();
 
-    return view('admin.events.performer-availability', compact('events'));
-}
-public function performerHistory()
-{
-    $events = User::with('attendedEvents')->get();
-
-    return view('admin.events.performer-history', compact('events'));
-}
-
-public function updatePerformerAvailability(Request $request, $eventId, $userId)
-{
-    $request->validate([
-        'status' => 'required|in:selected,unselected,undo'
-    ]);
-
-    // Pivot table assumed: event_user (with status column)
-    $event = Event::findOrFail($eventId);
-    $event->selectedPerformers()->updateExistingPivot($userId, [
-        'status' => $request->status
-    ]);
-
-    return response()->json(['success' => true, 'status' => $request->status]);
-}
+        return view('admin.events.performer-availability', compact('events'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'client' => 'required',
+            'venue' => 'required',
+            'type' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'status' => 'required',
+            'performers' => 'required|numeric',
+            'description' => 'nullable'
+        ]);
     
+        Event::create($request->all());
+    
+        return back()->with('success', 'Event added successfully.');
+    }
+    public function performerHistory()
+    {
+        $events = User::with('attendedEvents')->get();
+
+        return view('admin.events.performer-history', compact('events'));
+    }
+
+    public function updatePerformerAvailability(Request $request, $eventId, $userId)
+    {
+        $request->validate([
+            'status' => 'required|in:selected,unselected,undo',
+        ]);
+
+        // Pivot table assumed: event_user (with status column)
+        $event = Event::findOrFail($eventId);
+        $event->selectedPerformers()->updateExistingPivot($userId, [
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['success' => true, 'status' => $request->status]);
+    }
+
     //
     public function update(Request $request, Event $event)
-{
-    $request->validate([
-        'title' => 'sometimes|required|string|max:255',
-        'client' => 'nullable|string|max:255',
-        'venue' => 'nullable|string|max:255',
-        'type' => 'nullable|string|max:255',
-        'date' => 'sometimes|date',
-        'time' => 'sometimes',
-        'status' => 'sometimes|string',
-        'required_performers' => 'nullable|integer',
-        'description' => 'nullable|string',
-    ]);
+    {
+        $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'client' => 'nullable|string|max:255',
+            'venue' => 'nullable|string|max:255',
+            'type' => 'nullable|string|max:255',
+            'date' => 'sometimes|date',
+            'time' => 'sometimes',
+            'status' => 'sometimes|string',
+            'required_performers' => 'nullable|integer',
+            'description' => 'nullable|string',
+        ]);
 
-    $event->update($request->all());
+        $event->update($request->all());
 
-    return response()->json(['success' => true, 'event' => $event]);
-}
+        return response()->json(['success' => true, 'event' => $event]);
+    }
 
-public function destroy(Event $event)
-{
-    $event->delete();
+    public function destroy(Event $event)
+    {
+        $event->delete();
 
-    return response()->json(['success' => true]);
-}
+        return response()->json(['success' => true]);
+    }
 
     public function index()
     {
         $showEvents = Event::where('is_show_event', true)->orderBy('id')->get();
         $otherEvents = Event::where('is_show_event', false)->orderBy('id')->get();
-        $user=Auth::user();
-        if($user->type=="admin"||$user->type=="manager")
-        {
+        $user = Auth::user();
+        if ($user->type == 'admin' || $user->type == 'manager') {
             return view('admin.events.index', compact('showEvents', 'otherEvents'));
-        }else{
+        } else {
             return view('events.index', compact('showEvents', 'otherEvents'));
         }
-       
+
+    }
+
+    public function create()
+    {
+        $showEvents = Event::where('is_show_event', true)->orderBy('id')->get();
+        $otherEvents = Event::where('is_show_event', false)->orderBy('id')->get();
+        $user = Auth::user();
+        if ($user->type == 'admin' || $user->type == 'manager') {
+            return view('admin.events.create', compact('showEvents', 'otherEvents'));
+        } else {
+            return redirect()->route('dashboard');
+
+        }
+
     }
 
     public function mySchedule()
@@ -85,7 +114,6 @@ public function destroy(Event $event)
         $mySchedules = Event::whereHas('selectedPerformers', function ($q) {
             $q->where('user_id', auth()->id());
         })->get();
-        
 
         return view('events.my-schedule', compact('mySchedules'));
     }
