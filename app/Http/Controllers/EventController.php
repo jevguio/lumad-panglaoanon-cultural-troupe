@@ -13,13 +13,16 @@ class EventController extends Controller
     public function performerAvailability()
     {
         $events = Event::with('selectedPerformers')->get();
+        Log::info($events);
+        $users = User::all();
+        Log::info($users);
 
-        return view('admin.events.performer-availability', compact('events'));
+        return view('admin.events.performer-availability', compact('events', 'users'));
     }
 
     public function store(Request $request)
     {
-        
+
         Log::info($request);
         $request->validate([
             'title' => 'required|string',
@@ -58,15 +61,14 @@ class EventController extends Controller
             'status' => $request->status,
             'required_performers' => $request->performers,
             'description' => $request->description,
-            'is_show_event' => $request->is_show_event=='on' ?? false,
-            'mode' => $request->mode ?? 'manual',
+            'is_show_event' => $request->is_show_event == 'on' ?? false,
+            'mode' => $request->is_show_event == 'on' ? 'Show' : $request->mode ?? 'Others',
         ]);
 
         Log::info($ev);
 
         return back()->with('success', 'Event added successfully.');
     }
-    
 
     public function performerHistory()
     {
@@ -83,9 +85,17 @@ class EventController extends Controller
 
         // Pivot table assumed: event_user (with status column)
         $event = Event::findOrFail($eventId);
-        $event->selectedPerformers()->updateExistingPivot($userId, [
-            'status' => $request->status,
-        ]);
+        if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
+            // Update existing pivot
+            $event->selectedPerformers()->updateExistingPivot($userId, [
+                'status' => $request->status,
+            ]);
+        } else {
+            // Attach user with pivot status
+            $event->selectedPerformers()->attach($userId, [
+                'status' => $request->status,
+            ]);
+        }
 
         return response()->json(['success' => true, 'status' => $request->status]);
     }

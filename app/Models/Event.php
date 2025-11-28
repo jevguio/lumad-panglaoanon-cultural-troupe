@@ -17,7 +17,7 @@ class Event extends Model
  
     public function selectedPerformers()
     {
-        return $this->belongsToMany(User::class, 'event_user')->where("event_user.status","=","selected");
+        return $this->belongsToMany(User::class, 'event_user');
     }
     public function schedules()
     {
