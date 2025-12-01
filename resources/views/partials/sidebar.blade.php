@@ -9,14 +9,14 @@
 <div id="sidebar" class="sidebar" style="position: relative; 
 background-color: {{ $bgColor }} !important;">
 
-    <nav style="position:fixed;">
+    <nav style="position:fixed; width: 300px;">
         <div style="display: flex;left:0;top:20px; position: sticky; ">
             <div class="targ2" style="flex: 1;"></div>
-            <a  class="targ"    href="{{ route('dashboard') }}"
+            <a class="targ" href="{{ route('dashboard') }}"
                 style="border-color:black;border-width:4px; text-decoration: none; color: black; text-align: center; border-style:solid; border-radius: 30px;  width:40px; height:40px;background-color:transparent; font-weight: bold; font-size: 22px;padding:0px;margin:0px;">
                 x</a>
-    
-    
+
+
             <img src="{{ asset('icons/Menu.png') }}" onclick="toggleBtnOff()" class="targMenu hidden"
                 style="margin-left: auto;margin-right: auto;border:none;background-color:transparent; width: 40px;"></img>
         </div>
@@ -44,21 +44,21 @@ background-color: {{ $bgColor }} !important;">
         </div>
         <ul id="sidebarMenu">
             <li class="{{ request()->is('event-schedule') ? 'active' : '' }}" data-link="{{ route('events.index') }}">
-                <a href="{{ route('events.index') }}">
+                <a href="{{ route('events.index') }}" style="display: flex;">
                     <img src="{{ asset('icons/Schedule.png') }}" style="width:30px;  border: none;">
                     <span>Event Schedule</span></a>
             </li>
             @if (Auth::user()->type == 'admin')
                 <li class="{{ request()->is('performer/availability') ? 'active' : '' }}"
                     data-link="{{ route('performer.availability') }}">
-                    <a href="{{ route('performer.availability') }}">
+                    <a href="{{ route('performer.availability') }}" style="display: flex;">
                         <img src="{{ asset('icons/Theatre Mask.png') }}" style="width:30px;  border: none;">
                         <span>Performer Availability</span></a>
                 </li>
 
                 <li class="{{ request()->is('performer/attendance') ? 'active' : '' }}"
                     data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('performer.attendance') }}">
+                    <a href="{{ route('performer.attendance') }}" style="display: flex;">
                         <img src="{{ asset('icons/Attendance.png') }}" style="width:30px;  border: none;">
                         <span>Performer Attendance</span></a>
                 </li>
@@ -89,29 +89,42 @@ background-color: {{ $bgColor }} !important;">
             @else
                 <li class="{{ request()->is('event-availability-status') ? 'active' : '' }}"
                     data-link="{{ route('event.availability') }}">
-                    <a href="{{ route('event.availability') }}">Event Availability Status</a>
+                    <a href="{{ route('event.availability') }}">
+                        <img src="{{ asset('icons/Theatre Mask.png') }}" style="width:30px;  border: none;">
+                        Event Availability Status</a>
                 </li>
 
                 <li class="{{ request()->is('my-schedule') ? 'active' : '' }}" data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('my.schedule') }}">My Schedule</a>
+                    <a href="{{ route('my.schedule') }}">
+
+                        <img src="{{ asset('icons/Attendance.png') }}" style="width:30px;  border: none;">My
+                        Schedule</a>
                 </li>
 
                 <li class="{{ request()->is('attendance') ? 'active' : '' }}"
                     data-link="{{ route('attendance.index') }}">
-                    <a href="{{ route('attendance.index') }}">Event Attendance Status</a>
+                    <a href="{{ route('attendance.index') }}">
+                        <img src="{{ asset('icons/Attendance.png') }}" style="width:30px;  border: none;">
+                        Event Attendance Status</a>
                 </li>
                 <li class="{{ request()->is('manage-costume') ? 'active' : '' }}"
                     data-link="{{ route('manage-costume') }}">
-                    <a href="{{ route('manage-costume') }}">Manage Costume</a>
+                    <a href="{{ route('manage-costume') }}">
+                        <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
+                        Manage Costume</a>
                 </li>
 
                 <li class="{{ request()->is('view/events/history') ? 'active' : '' }}"
                     data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('view.events.history') }}">Event History</a>
+                    <a href="{{ route('view.events.history') }}">
+                        <img src="{{ asset('icons/Historical.png') }}" style="width:30px;  border: none;">
+                        Event History</a>
                 </li>
                 <li class="{{ request()->is('view/events/hignlights') ? 'active' : '' }}"
                     data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('view.events.highlights') }}">Events Highlights</a>
+                    <a href="{{ route('view.events.highlights') }}"> 
+                        <img src="{{ asset('icons/Spotlight.png') }}" style="width:30px;  border: none;">
+                        Events Highlights</a>
                 </li>
             @endif
         </ul>
