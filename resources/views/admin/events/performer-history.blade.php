@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 style="color:#b22222; margin-bottom:20px;">PERFORMER AVAILABILITY</h2>
+    <h2 style="color:#b22222; margin-bottom:20px;">PERFORMER HISTORY</h2>
 
     @foreach ($events as $user)
         <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
