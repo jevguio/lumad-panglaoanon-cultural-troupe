@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container"  style="padding:20px">
     <h2 class="mb-3" style="color:#8B0000;">MANAGE EVENT HIGHLIGHTS</h2>
     <button id="openModalBtn" style="background:#4CAF50;color:white;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;">+ ADD / UPDATE HIGHLIGHT</button>
 

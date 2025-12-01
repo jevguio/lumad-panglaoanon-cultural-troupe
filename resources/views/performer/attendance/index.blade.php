@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container"  style="padding:20px">
         <h2 class="mb-4 text-danger">PERFORMER ATTENDANCE</h2>
 
         <div class="  mb-4">

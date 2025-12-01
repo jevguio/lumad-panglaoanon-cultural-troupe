@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content">
+    <div class="content" style="padding:20px">
         <h2 class="page-title">EVENT AVAILABILITY STATUS</h2>
 
         <table class="event-table">

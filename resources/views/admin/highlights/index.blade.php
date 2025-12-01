@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container" style="padding:20px">
         <div style="display: flex;">
             <h2 class="mb-3" style="color:#8B0000; flex: 1;">MANAGE EVENT HIGHLIGHTS</h2>
             <button id="openModalBtn" onclick="openHighlightModal(null)"
