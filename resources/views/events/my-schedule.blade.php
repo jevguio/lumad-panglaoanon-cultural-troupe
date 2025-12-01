@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content">
+    <div class="content" style="padding: 20px;">
         <h1>MY SCHEDULE</h1>
 
         <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse: collapse;">
