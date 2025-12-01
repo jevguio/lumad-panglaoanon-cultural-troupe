@@ -10,7 +10,7 @@
                 <div id="eventModalContent"></div>
             </div>
         </div>
-        <h2 class="mb-4 text-danger">PERFORMER ATTENDANCE</h2>
+        <h2 class="mb-4 text-danger">Event History</h2>
 
         <div class="  mb-4">
             <div class=" p-0">
@@ -32,11 +32,7 @@
                                         EVENT</button>
                                 </td>
                                 <td>
-                                    @foreach ($event->performers as $performer)
-                                        @if ($performer->id == Auth::user()->id)
-                                            {{ $performer->pivot->attendance }}
-                                        @endif
-                                    @endforeach
+                                    {{ $event->status}}
                                 </td>
                             </tr>
                         @endforeach
