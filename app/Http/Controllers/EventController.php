@@ -131,8 +131,10 @@ class EventController extends Controller
                     'status' => $request->status,
                 ]);
             }
+            if($request->status=="selected"){
+                $this->sendEventInvite($event,$user->email);
 
-            $this->sendEventInvite($event,$user->email);
+            }
 
             return response()->json([
                 'success' => true,
