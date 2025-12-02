@@ -9,38 +9,38 @@ use App\Http\Controllers\EventHighlightsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+use Google\Client;
 Route::get('/', function () {
     return redirect('dashboard');
 });
 
 // // Public routes
-// use Google\Client;
 
-// Route::get('/google/oauth', function () {
-//     $client = new Client();
-//     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
-//     $client->setRedirectUri(url('/google/oauth/callback'));
-//     $client->setAccessType('offline');
-//     $client->setPrompt('consent');
-//     $client->setScopes(['https://www.googleapis.com/auth/calendar']);
+Route::get('/google/oauth', function () {
+    $client = new Client();
+    $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
+    $client->setRedirectUri(url('/google/oauth/callback'));
+    $client->setAccessType('offline');
+    $client->setPrompt('consent');
+    $client->setScopes(['https://www.googleapis.com/auth/calendar']);
 
-//     return redirect($client->createAuthUrl());
-// });
+    return redirect($client->createAuthUrl());
+});
 
-// Route::get('/google/oauth/callback', function () {
-//     $client = new Client();
-//     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
-//     $client->setRedirectUri(url('/google/oauth/callback'));
+Route::get('/google/oauth/callback', function () {
+    $client = new Client();
+    $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
+    $client->setRedirectUri(url('/google/oauth/callback'));
 
-//     $token = $client->fetchAccessTokenWithAuthCode(request()->code);
+    $token = $client->fetchAccessTokenWithAuthCode(request()->code);
 
-//     file_put_contents(
-//         storage_path('app/google/calendar/token.json'),
-//         json_encode($token)
-//     );
+    file_put_contents(
+        storage_path('app/google/calendar/token.json'),
+        json_encode($token)
+    );
 
-//     return "Google Calendar connected successfully!";
-// });
+    return "Google Calendar connected successfully!";
+});
 
 Route::middleware(['guest'])->group(function () {
     Auth::routes();

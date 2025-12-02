@@ -79,64 +79,82 @@ class EventController extends Controller
 
     public function updatePerformerAvailability(Request $request, $eventId, $userId)
     {
-        $request->validate([
-            'status' => 'required|in:selected,unselected,undo',
-            'email' => 'required|email',
-        ]);
 
-        // Load Laravel event
-        $event = Event::findOrFail($eventId);
+        try {
+            $request->validate([
+                'status' => 'required|in:selected,unselected,undo', 
+            ]);
 
-        // Update pivot (selected performers)
-        if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
-            $event->selectedPerformers()->updateExistingPivot($userId, [
+            // Load Laravel event
+            $event = Event::findOrFail($eventId);
+            $user=User::findOrFail($userId);
+            // Update pivot (selected performers)
+            if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
+                $event->selectedPerformers()->updateExistingPivot($userId, [
+                    'status' => $request->status,
+                ]);
+            } else {
+                $event->selectedPerformers()->attach($userId, [
+                    'status' => $request->status,
+                ]);
+            }
+            // Google Calendar Client
+            $calendar = app(\App\Services\GoogleCalendarService::class)->client();
+
+            // Prepare Google Calendar Event
+            $calendarEvent = new \Google\Service\Calendar\Event([
+                'summary' => $event->title,
+                'location' => $event->venue,
+                'description' => $event->description,
+
+                'start' => [
+                    'dateTime' => $event->date.'T'.$event->time,
+                    'timeZone' => 'Asia/Manila',
+                ],
+
+                'end' => [
+                    'dateTime' => $event->date.'T'.$event->end_time,
+                    'timeZone' => 'Asia/Manila',
+                ],
+
+                'attendees' => [
+                    ['email' => $user->email],
+                ],
+
+                'reminders' => [
+                    'useDefault' => true,
+                ],
+            ]);
+
+            // Send invitation email automatically
+            $calendar->events->insert(
+                'primary',
+                $calendarEvent,
+                ['sendUpdates' => 'all']
+            );
+
+            return response()->json([
+                'success' => true,
                 'status' => $request->status,
             ]);
-        } else {
-            $event->selectedPerformers()->attach($userId, [
-                'status' => $request->status,
-            ]);
+
+        } catch (\Google\Service\Exception $e) {
+            Log::error($e->getMessage());
+
+            // Catch Google Service errors
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        } catch (\Exception $e) {
+            // Catch general errors
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        // Google Calendar Client
-        $calendar = app(\App\Services\GoogleCalendarService::class)->client();
-
-        // Prepare Google Calendar Event
-        $calendarEvent = new \Google\Service\Calendar\Event([
-            'summary' => $event->title,
-            'location' => $event->venue, // NOW using Laravel event data
-            'description' => $event->description,
-
-            'start' => [
-                'dateTime' => $event->date.'T'.$event->time,
-                'timeZone' => 'Asia/Manila',
-            ],
-
-            'end' => [
-                'dateTime' => $event->date.'T'.$event->end_time,
-                'timeZone' => 'Asia/Manila',
-            ],
-
-            'attendees' => [
-                ['email' => $request->email],
-            ],
-
-            'reminders' => [
-                'useDefault' => true,
-            ],
-        ]);
-
-        // Send invitation email automatically
-        $calendar->events->insert(
-            'primary',
-            $calendarEvent,
-            ['sendUpdates' => 'all']
-        );
-
-        return response()->json([
-            'success' => true,
-            'status' => $request->status,
-        ]);
     }
 
     //
