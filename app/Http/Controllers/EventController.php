@@ -76,9 +76,7 @@ class EventController extends Controller
         $events = User::with('attendedEvents')->get();
 
         return view('admin.events.performer-history', compact('events'));
-    }
-    use Carbon\Carbon;
-    use Illuminate\Support\Facades\Log;
+    } 
     
     public function updatePerformerAvailability(Request $request, $eventId, $userId)
     {
