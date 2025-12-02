@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
@@ -78,6 +79,43 @@ class EventController extends Controller
         return view('admin.events.performer-history', compact('events'));
     }
 
+    public function sendEventInvite($event, $userEmail)
+    {
+        // Use Carbon to format start/end in proper format
+        $start = \Carbon\Carbon::parse($event->date . ' ' . $event->time)->format('Ymd\THis');
+        $end = \Carbon\Carbon::parse($event->date . ' ' . $event->end_time)
+                ->format('Ymd\THis');
+    
+        $uid = uniqid(); // unique event ID
+        $description = $event->description ?: '';
+        $location = $event->venue ?: '';
+        $summary = $event->title ?: 'No Title';
+    
+        $icsContent = <<<ICS
+    BEGIN:VCALENDAR
+    VERSION:2.0
+    PRODID:-//YourApp//NONSGML v1.0//EN
+    BEGIN:VEVENT
+    UID:$uid
+    DTSTAMP:$start
+    DTSTART:$start
+    DTEND:$end
+    SUMMARY:$summary
+    DESCRIPTION:$description
+    LOCATION:$location
+    END:VEVENT
+    END:VCALENDAR
+    ICS;
+    
+        // Send email with ICS attachment
+        Mail::raw("You are invited to: $summary", function ($message) use ($icsContent, $userEmail) {
+            $message->to($userEmail)
+                    ->subject('Event Invitation')
+                    ->attachData($icsContent, 'invite.ics', [
+                        'mime' => 'text/calendar',
+                    ]);
+        });
+    }
     public function updatePerformerAvailability(Request $request, $eventId, $userId)
     {
         try {
@@ -99,53 +137,13 @@ class EventController extends Controller
                 ]);
             }
 
-            // Prepare Google Calendar client
-            $calendar = app(\App\Services\GoogleCalendarService::class)->client();
-
-            // Parse event start and end using Carbon
-            $startDateTime = Carbon::parse($event->date.' '.$event->time);
-            $endDateTime = $event->end_time
-                ? Carbon::parse($event->date.' '.$event->end_time)
-                : $startDateTime->copy()->addHour(); // default 1 hour
-
-            // Prepare Google Calendar event
-            $calendarEvent = new \Google\Service\Calendar\Event([
-                'summary' => $event->title ?: 'No Title',
-                'location' => $event->venue ?: '',
-                'description' => $event->description ?: '',
-                'start' => [
-                    'dateTime' => $startDateTime->toIso8601String(),
-                    'timeZone' => 'Asia/Manila',
-                ],
-                'end' => [
-                    'dateTime' => $endDateTime->toIso8601String(),
-                    'timeZone' => 'Asia/Manila',
-                ],
-                'attendees' => [
-                    ['email' => $user->email],
-                ],
-                'reminders' => ['useDefault' => true],
-            ]);
-
-            // Insert event and send invite
-            $calendar->events->insert(
-                'primary',
-                $calendarEvent,
-                ['sendUpdates' => 'all']
-            );
+            $this->sendEventInvite($event,$user->email);
 
             return response()->json([
                 'success' => true,
                 'status' => $request->status,
             ]);
-
-        } catch (\Google\Service\Exception $e) {
-            Log::error('Google Calendar Error: '.$e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+ 
         } catch (\Exception $e) {
             Log::error('General Error: '.$e->getMessage());
 
