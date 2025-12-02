@@ -76,18 +76,19 @@ class EventController extends Controller
 
         return view('admin.events.performer-history', compact('events'));
     }
-
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\Log;
+    
     public function updatePerformerAvailability(Request $request, $eventId, $userId)
     {
-
         try {
             $request->validate([
-                'status' => 'required|in:selected,unselected,undo', 
+                'status' => 'required|in:selected,unselected,undo',
             ]);
-
-            // Load Laravel event
+    
             $event = Event::findOrFail($eventId);
-            $user=User::findOrFail($userId);
+            $user = User::findOrFail($userId);
+    
             // Update pivot (selected performers)
             if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
                 $event->selectedPerformers()->updateExistingPivot($userId, [
@@ -98,65 +99,62 @@ class EventController extends Controller
                     'status' => $request->status,
                 ]);
             }
-            // Google Calendar Client
+    
+            // Prepare Google Calendar client
             $calendar = app(\App\Services\GoogleCalendarService::class)->client();
-
-            // Prepare Google Calendar Event
+    
+            // Parse event start and end using Carbon
+            $startDateTime = Carbon::parse($event->date . ' ' . $event->time)->toIso8601String();
+            $endDateTime = Carbon::parse($event->date . ' ' . $event->end_time)->toIso8601String();
+    
+            // Prepare Google Calendar event
             $calendarEvent = new \Google\Service\Calendar\Event([
-                'summary' => $event->title,
-                'location' => $event->venue,
-                'description' => $event->description,
-
+                'summary' => $event->title ?: 'No Title',
+                'location' => $event->venue ?: '',
+                'description' => $event->description ?: '',
                 'start' => [
-                    'dateTime' => $event->date.'T'.$event->time,
+                    'dateTime' => $startDateTime,
                     'timeZone' => 'Asia/Manila',
                 ],
-
                 'end' => [
-                    'dateTime' => $event->date.'T'.$event->end_time,
+                    'dateTime' => $endDateTime,
                     'timeZone' => 'Asia/Manila',
                 ],
-
                 'attendees' => [
                     ['email' => $user->email],
                 ],
-
-                'reminders' => [
-                    'useDefault' => true,
-                ],
+                'reminders' => ['useDefault' => true],
             ]);
-
-            // Send invitation email automatically
+    
+            // Insert event and send invite
             $calendar->events->insert(
                 'primary',
                 $calendarEvent,
                 ['sendUpdates' => 'all']
             );
-
+    
             return response()->json([
                 'success' => true,
                 'status' => $request->status,
             ]);
-
+    
         } catch (\Google\Service\Exception $e) {
-            Log::error($e->getMessage());
-
-            // Catch Google Service errors
+            Log::error('Google Calendar Error: ' . $e->getMessage());
+    
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 500);
         } catch (\Exception $e) {
-            // Catch general errors
-            Log::error($e->getMessage());
-
+            Log::error('General Error: ' . $e->getMessage());
+    
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 500);
         }
     }
-
+    
     //
     public function update(Request $request, Event $event)
     {
