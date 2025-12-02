@@ -14,18 +14,15 @@ class EventController extends Controller
 {
     public function performerAvailability()
     {
-        $events = Event::with('selectedPerformers')->get();
-        Log::info($events);
-        $users = User::all();
-        Log::info($users);
+        $events = Event::with('selectedPerformers')->get(); 
+        $users = User::all(); 
 
         return view('admin.events.performer-availability', compact('events', 'users'));
     }
 
     public function store(Request $request)
     {
-
-        Log::info($request);
+ 
         $request->validate([
             'title' => 'required|string',
             'client' => 'required',
@@ -51,8 +48,7 @@ class EventController extends Controller
         //     'description' => 'nullable|string',
         //     'is_show_event' => 'required|boolean',
         //     'mode' => 'nullable|string',
-        // ]);
-        Log::info($request);
+        // ]); 
         $ev = Event::create([
             'title' => $request->title,
             'client' => $request->client,
@@ -66,8 +62,7 @@ class EventController extends Controller
             'is_show_event' => $request->is_show_event == 'on' ?? false,
             'mode' => $request->is_show_event == 'on' ? 'Show' : $request->mode ?? 'Others',
         ]);
-
-        Log::info($ev);
+ 
 
         return back()->with('success', 'Event added successfully.');
     }
