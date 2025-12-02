@@ -81,23 +81,62 @@ class EventController extends Controller
     {
         $request->validate([
             'status' => 'required|in:selected,unselected,undo',
+            'email' => 'required|email',
         ]);
 
-        // Pivot table assumed: event_user (with status column)
+        // Load Laravel event
         $event = Event::findOrFail($eventId);
+
+        // Update pivot (selected performers)
         if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
-            // Update existing pivot
             $event->selectedPerformers()->updateExistingPivot($userId, [
                 'status' => $request->status,
             ]);
         } else {
-            // Attach user with pivot status
             $event->selectedPerformers()->attach($userId, [
                 'status' => $request->status,
             ]);
         }
 
-        return response()->json(['success' => true, 'status' => $request->status]);
+        // Google Calendar Client
+        $calendar = app(\App\Services\GoogleCalendarService::class)->client();
+
+        // Prepare Google Calendar Event
+        $calendarEvent = new \Google\Service\Calendar\Event([
+            'summary' => $event->title,
+            'location' => $event->venue, // NOW using Laravel event data
+            'description' => $event->description,
+
+            'start' => [
+                'dateTime' => $event->date.'T'.$event->time,
+                'timeZone' => 'Asia/Manila',
+            ],
+
+            'end' => [
+                'dateTime' => $event->date.'T'.$event->end_time,
+                'timeZone' => 'Asia/Manila',
+            ],
+
+            'attendees' => [
+                ['email' => $request->email],
+            ],
+
+            'reminders' => [
+                'useDefault' => true,
+            ],
+        ]);
+
+        // Send invitation email automatically
+        $calendar->events->insert(
+            'primary',
+            $calendarEvent,
+            ['sendUpdates' => 'all']
+        );
+
+        return response()->json([
+            'success' => true,
+            'status' => $request->status,
+        ]);
     }
 
     //

@@ -10,14 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    
-
     public function loginShow(Request $request)
     {
         $isAdminLogin = $request->input('isAdminLogin', false);
 
         return view('auth.login', compact('isAdminLogin'));
     }
+
     public function index()
     {
         $user = Auth::user();
@@ -30,14 +29,14 @@ class DashboardController extends Controller
         // Real Data
         $costumes = Costume::latest()->take(3)->get();
         $events = Event::orderBy('date', 'asc')->take(3)->get();
-
+ 
         if (! in_array($user->type, ['admin', 'manager'])) {
 
             return view('performer.dashboard', compact(
                 'upcomingEvents',
                 'totalCostumes',
                 'activeMembers',
-                'costumes',
+                'costumes', 
                 'events'
             ));
         }
@@ -49,5 +48,24 @@ class DashboardController extends Controller
             'costumes',
             'events'
         ));
+    }
+    public function search()
+    { 
+        $eventsAll = Event::all()->map(function ($e) {
+            $e->type = 'event';
+
+            return $e;
+        });
+
+        // Search Costume
+        $costumesAll = Costume::all()
+            ->map(function ($c) {
+                $c->type = 'costume';
+
+                return $c;
+            });
+        $allData = $eventsAll->merge($costumesAll);
+        return response()->json([
+            'allData'=> $allData ]);
     }
 }

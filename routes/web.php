@@ -13,7 +13,34 @@ Route::get('/', function () {
     return redirect('dashboard');
 });
 
-// Public routes
+// // Public routes
+// use Google\Client;
+
+// Route::get('/google/oauth', function () {
+//     $client = new Client();
+//     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
+//     $client->setRedirectUri(url('/google/oauth/callback'));
+//     $client->setAccessType('offline');
+//     $client->setPrompt('consent');
+//     $client->setScopes(['https://www.googleapis.com/auth/calendar']);
+
+//     return redirect($client->createAuthUrl());
+// });
+
+// Route::get('/google/oauth/callback', function () {
+//     $client = new Client();
+//     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
+//     $client->setRedirectUri(url('/google/oauth/callback'));
+
+//     $token = $client->fetchAccessTokenWithAuthCode(request()->code);
+
+//     file_put_contents(
+//         storage_path('app/google/calendar/token.json'),
+//         json_encode($token)
+//     );
+
+//     return "Google Calendar connected successfully!";
+// });
 
 Route::middleware(['guest'])->group(function () {
     Auth::routes();
@@ -23,6 +50,7 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/search', [DashboardController::class, 'search'])->name('search');
     Route::get('/event-schedule', [EventController::class, 'index'])->name('events.index');
 
     Route::post('/events/{event}/status', [EventController::class, 'updateStatus'])->name('events.updateStatus');
@@ -41,6 +69,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/event-availability-status', [EventController::class, 'availability'])->name('event.availability');
     Route::get('/my-schedule', [EventController::class, 'mySchedule'])->name('my.schedule');
+// routes/web.php
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
     Route::get('/performer/availability', [EventController::class, 'performerAvailability'])
         ->name('performer.availability')

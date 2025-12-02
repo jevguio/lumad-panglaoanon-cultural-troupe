@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<?php 
+error_reporting(E_ALL & ~E_DEPRECATED);
 
+?>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,10 +64,16 @@
                             style="text-decoration: none;   padding:10px; color: black; align-items: center; justify-content: center; vertical-align: middle; text-align: center; margin-top: auto; margin-bottom: auto; text-transform: capitalize;">
                             Members
                         </a>
-                        <div style="display: flex; border: black 1px solid; padding: 5px; margin: 10px;">
+                        <div
+                            style="display: flex; border: 1px solid #ccc; padding-right: 10px; margin-bottom: 15px; border-radius: 8px; width: 300px; position: relative;">
+                            <input id="searchInput" type="text" placeholder="Search Events or Costumes..."
+                                style="border: none; outline: none; flex: 1;border-radius: 8px;">
+                            <button style="border: none; background: transparent;">🔍</button>
 
-                            <input type="text" placeholder="Search in site" style="border: none;">
-                            <button style="border: none; background-color: transparent;">🔍︎</button>
+                            <div id="searchResults"
+                                style="border: 1px solid #ccc; background-color: #ccc; border-radius: 5px; padding: 10px; display:block; max-height: 300px; overflow-y:auto; position: absolute; top: 55px;  flex:1;">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,32 +88,79 @@
         <div id="flash-message" class="flash-message">
             {{ session('success') }}
         </div>
-
-        <script>
-            setTimeout(() => {
-                const flash = document.getElementById('flash-message');
-                if (flash) {
-                    flash.style.opacity = '0';
-                    setTimeout(() => flash.remove(), 500); // remove after fade
-                }
-            }, 4000);
-        </script>
-
-        <style>
-            .flash-message {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: #4caf50;
-                color: white;
-                padding: 10px 16px;
-                border-radius: 4px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-                transition: opacity 0.5s ease;
-                z-index: 9999;
-            }
-        </style>
     @endif
+
+    <script>
+        let allData = [];
+
+        fetch("{{ route('search') }}")
+            .then(res => res.json())
+            .then(data => {
+                allData = data.allData;
+                console.log("Loaded data:", allData);
+            });
+
+        const input = document.getElementById('searchInput');
+        const resultsBox = document.getElementById('searchResults');
+
+        input.addEventListener('keyup', function() {
+            let query = input.value.toString().toLowerCase();
+
+            if (query.length < 1) {
+                resultsBox.style.display = "none";
+                return;
+            }
+            let filtered = allData.filter(item =>
+                item.name ? item.name.toLowerCase().includes(query) : item.title ? item.title.toLowerCase()
+                .includes(query) : item.venue ? item.venue.toLowerCase().includes(query) : item.type
+                .toLowerCase().includes(query)
+            );
+
+            resultsBox.innerHTML = "";
+
+            if (filtered.length === 0) {
+                resultsBox.innerHTML = "<p>No results found.</p>";
+            } else {
+                filtered.forEach(item => {
+                    resultsBox.innerHTML += `
+                <div style="display:flex; align-items:center; gap:12px; padding:8px; border-bottom:1px solid #eee; cursor:pointer;"
+                     onclick="window.location='/${item.type??item.status}/${item.id}'">
+ 
+
+                    <div>
+                        <strong>${item.name??item.title}</strong>
+                        <p style="margin:0; font-size:12px; color:gray;">${item.type??item.status}</p>
+                    </div>
+                </div>
+            `;
+                });
+            }
+
+            resultsBox.style.display = "block";
+        });
+        setTimeout(() => {
+            const flash = document.getElementById('flash-message');
+            if (flash) {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 500); // remove after fade
+            }
+        }, 4000);
+    </script>
+
+    <style>
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease;
+            z-index: 9999;
+        }
+    </style>
 
     @stack('scripts')
     <script>
