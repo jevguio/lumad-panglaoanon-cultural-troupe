@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/event-availability-status', [EventController::class, 'availability'])->name('event.availability');
     Route::get('/my-schedule', [EventController::class, 'mySchedule'])->name('my.schedule');
 // routes/web.php
-Route::get('/search', [App\Http\Controllers\SearchController::class, 'search'])->name('search');
+Route::get('/search', [DashboardController::class, 'search'])->name('search');
 
     Route::get('/performer/availability', [EventController::class, 'performerAvailability'])
         ->name('performer.availability')
