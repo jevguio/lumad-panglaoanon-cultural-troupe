@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::get('/events/view/{event}', [EventController::class, 'index'])->name('events.show');
-    Route::get('/costumes/view/{costume}', [CostumeController::class, 'index'])->name('costume.status');
+    Route::get('/costumes/view/{costume}', [CostumeController::class, 'index'])->name('costume.view');
     Route::get('/events', [EventController::class, 'create'])->name('events.create');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update'); // update
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy'); // delete
