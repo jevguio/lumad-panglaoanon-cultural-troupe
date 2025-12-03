@@ -82,6 +82,7 @@ Route::get('/search', [DashboardController::class, 'search'])->name('search');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::resource('costumes', CostumeController::class);
     Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status');
+    Route::get('/costumes/{costume}', [CostumeController::class, 'index'])->name('costume.status');
     Route::get('/manage-costume', [CostumeController::class, 'index'])->name('manage-costume');
     Route::get('/costume/{costume}/edit', [CostumeController::class, 'edit'])->name('edit-costume');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');

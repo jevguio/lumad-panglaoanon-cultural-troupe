@@ -124,7 +124,7 @@ error_reporting(E_ALL & ~E_DEPRECATED);
                 filtered.forEach(item => {
                     resultsBox.innerHTML += `
                 <div style="display:flex; align-items:center; gap:12px; padding:8px; border-bottom:1px solid #eee; cursor:pointer;"
-                     onclick="window.location='/${item.type??item.status}/${item.id}'">
+                     onclick="window.location='/${item.type?'events':'costumes'}/${item.id}'">
  
 
                     <div>
