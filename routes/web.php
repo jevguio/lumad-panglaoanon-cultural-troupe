@@ -50,7 +50,7 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/search', [DashboardController::class, 'search'])->name('search');
+    Route::post('/search/item', [DashboardController::class, 'search'])->name('search.item');
     Route::get('/event-schedule', [EventController::class, 'index'])->name('events.index');
 
     Route::post('/events/{event}/status', [EventController::class, 'updateStatus'])->name('events.updateStatus');

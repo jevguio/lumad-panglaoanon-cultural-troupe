@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<?php 
+<?php
 error_reporting(E_ALL & ~E_DEPRECATED);
 
 ?>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -93,7 +94,14 @@ error_reporting(E_ALL & ~E_DEPRECATED);
     <script>
         let allData = [];
 
-        fetch("{{ route('search') }}")
+        fetch("{{ route('search.item') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({})
+            })
             .then(res => res.json())
             .then(data => {
                 allData = data.allData;
