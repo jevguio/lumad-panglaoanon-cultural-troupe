@@ -17,10 +17,31 @@ error_reporting(E_ALL & ~E_DEPRECATED);
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet">
 
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease;
+            z-index: 9999;
+        }
+    </style>
     <!-- Scripts -->
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </head>
 
 <body>
@@ -153,25 +174,6 @@ error_reporting(E_ALL & ~E_DEPRECATED);
                 setTimeout(() => flash.remove(), 500); // remove after fade
             }
         }, 4000);
-    </script>
-
-    <style>
-        .flash-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 4px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            transition: opacity 0.5s ease;
-            z-index: 9999;
-        }
-    </style>
-
-    @stack('scripts')
-    <script>
         document.querySelectorAll("#sidebarMenu li").forEach(item => {
             item.addEventListener("click", function() {
                 document.querySelectorAll("#sidebarMenu li").forEach(li => li.classList.remove("active"));
@@ -236,7 +238,7 @@ error_reporting(E_ALL & ~E_DEPRECATED);
         }
     </script>
 
-
+    @stack('scripts')
 </body>
 
 </html>

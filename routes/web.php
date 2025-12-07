@@ -1,15 +1,14 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CostumeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventHighlightsController;
 use App\Http\Controllers\UserController;
+use Google\Client;
 use Illuminate\Support\Facades\Route;
 
-use Google\Client;
 Route::get('/', function () {
     return redirect('dashboard');
 });
@@ -17,7 +16,7 @@ Route::get('/', function () {
 // // Public routes
 
 Route::get('/google/oauth', function () {
-    $client = new Client();
+    $client = new Client;
     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
     $client->setRedirectUri(url('/google/oauth/callback'));
     $client->setAccessType('offline');
@@ -28,7 +27,7 @@ Route::get('/google/oauth', function () {
 });
 
 Route::get('/google/oauth/callback', function () {
-    $client = new Client();
+    $client = new Client;
     $client->setAuthConfig(storage_path('app/google/calendar/credentials.json'));
     $client->setRedirectUri(url('/google/oauth/callback'));
 
@@ -39,7 +38,7 @@ Route::get('/google/oauth/callback', function () {
         json_encode($token)
     );
 
-    return "Google Calendar connected successfully!";
+    return 'Google Calendar connected successfully!';
 });
 
 Route::middleware(['guest'])->group(function () {
@@ -56,14 +55,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/status', [EventController::class, 'updateStatus'])->name('events.updateStatus');
 
     Route::post('/admin/events/store', [EventController::class, 'store'])->name('events.store');
-
+    Route::get('/calendar/events', function () {
+        return \App\Models\Event::all()->map(function ($e) {
+            return [
+                'id' => $e->id,
+                'title' => $e->title,
+                'start' => $e->date.'T'.$e->time,
+                'end' => $e->date.'T'.$e->end_time,
+                'venue' => $e->venue,
+                'description' => $e->description,
+            ];
+        });
+    });
 
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
 
-    
     Route::get('/events/view/{event}', [EventController::class, 'index'])->name('events.show');
     Route::get('/costumes/view/{costume}', [CostumeController::class, 'index'])->name('costume.view');
-
 
     Route::get('/events', [EventController::class, 'create'])->name('events.create');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update'); // update
@@ -75,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/event-availability-status', [EventController::class, 'availability'])->name('event.availability');
     Route::get('/my-schedule', [EventController::class, 'mySchedule'])->name('my.schedule');
-// routes/web.php 
+    // routes/web.php
 
     Route::get('/performer/availability', [EventController::class, 'performerAvailability'])
         ->name('performer.availability')
