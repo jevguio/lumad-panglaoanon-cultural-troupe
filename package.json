@@ -18,5 +18,8 @@
         "react-dom": "^18.2.0",
         "sass": "^1.56.1",
         "vite": "^7.0.4"
+    },
+    "dependencies": {
+        "fullcalendar": "^6.1.19"
     }
 }

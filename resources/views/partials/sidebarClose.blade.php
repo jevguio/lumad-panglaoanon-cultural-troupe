@@ -1,6 +1,6 @@
 @php
     $bgColor = match (Auth::user()->type) {
-        'admin' => '#D48C06',
+        'admin' => '#BB5248',
         'manager' => '#D48C06', // example blue for manager
         default => '#D48C06', // example green for performer
     };
