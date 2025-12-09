@@ -1,14 +1,13 @@
 @php
     $bgColor = match (Auth::user()->type) {
-        'admin' => '#D48C06',
+        'admin' => '#BB5248',
         'manager' => '#D48C06', // example blue for manager
         default => '#D48C06', // example green for performer
     };
 @endphp
 
 <div id="sidebar" class="sidebar" style="position: relative; 
-background-color: {{ $bgColor }} !important;">
-
+background-color: {{ $bgColor }} !important;"> 
     <nav style="position:fixed; width: 300px;">
         <div style="display: flex;left:0;top:20px; position: sticky; ">
             <div class="targ2" style="flex: 1;"></div>
