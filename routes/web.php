@@ -111,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/manage/events/hignlights', [EventHighlightsController::class, 'index'])->name('manage.events.highlights');
 
-    Route::get('/view/events/hignlights', [EventHighlightsController::class, 'index'])->name('view.events.highlights');
+    Route::get('/view/events/hignlights', [EventHighlightsController::class, 'highlights'])->name('view.events.highlights');
     Route::get('/view/events/history', [EventHighlightsController::class, 'history'])->name('view.events.history');
 
     Route::post('/event-highlights', [EventHighlightsController::class, 'store'])->name('highlights.store');
