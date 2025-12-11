@@ -1,0 +1,337 @@
+@extends('layouts.app')
+
+@section('content')
+    <h2 style="color:#b22222; margin-bottom:20px;">COSTUME STATUS</h2>
+
+    <button id="openAddCostumeModal"
+        style="background:#31708f;color:white;padding:8px 12px;border:none;border-radius:6px;cursor:pointer;margin-bottom:20px;">
+        + ADD COSTUME
+    </button>
+    @foreach ($performers as $performer)
+        <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
+            <div style="background:#31708f; color:white; padding:10px; font-weight:bold;">
+                PERFORMER ID: {{ $performer->name }}
+            </div>
+
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#31708f;color:white; text-align:left;">
+                        <th style="padding:8px; border:1px solid #ddd;">Costume ID</th>
+                        <th style="padding:8px; border:1px solid #ddd;">Costume Details</th>
+                        <th style="padding:8px; border:1px solid #ddd;">Costume Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($performer->costumes as $costume)
+                        <tr style="background-color:#f2f2f2">
+                            <td style="padding:8px; border:1px solid #ddd;">Costume {{ $costume->id }}</td>
+                            <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+                                <button class="view-costume-btn" data-id="{{ $costume->id }}"
+                                    style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                                    VIEW COSTUME
+                                </button>
+                            </td>
+                            <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+                                <span
+                                    style="
+                                    {{ strtolower($costume->status) === 'returned'
+                                        ? 'color:green;'
+                                        : (strtolower($costume->status) === 'lost'
+                                            ? 'color:red;'
+                                            : 'color:orange;') }}">
+                                    {{ ucfirst($costume->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" style="text-align:center; padding:10px;">No costumes found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    @endforeach
+
+    <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
+        <div style="background:#31708f; color:white; padding:10px; font-weight:bold;">
+            AVAILABLE COSTUME
+        </div>
+
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="background:#31708f;color:white; text-align:left;">
+                    <th style="padding:8px; border:1px solid #ddd;">Costume ID</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th> 
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($costumes as $costume)
+                    <tr style="background-color:#f2f2f2">
+                        <td style="padding:8px; border:1px solid #ddd;">Costume {{ $costume->id }}</td>
+                        <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+                            <button class="view-costume-btn" data-id="{{ $costume->id }}"
+                                style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                                VIEW COSTUME
+                            </button>
+                            <button class="edit-costume-btn" data-id="{{ $costume->id }}"
+                                style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                                EDIT COSTUME
+                            </button>
+                        </td> 
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="3" style="text-align:center; padding:10px;">No costumes found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div id="addCostumeModal" class="modal">
+        <div class="modal-card">
+            <span class="close" id="closeAddCostumeModal">&times;</span>
+            <h2>Add Costume</h2>
+
+            <form id="addCostumeForm" enctype="multipart/form-data">
+                @csrf
+                <label>Costume Image:</label>
+                <input type="text" name="name" style="width:100%;padding:8px;margin-bottom:10px;" required> 
+
+                <label>Costume Image:</label>
+                <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;"
+                    required>
+
+                <button type="submit"
+                    style="background:#31708f;color:white;padding:8px 12px;border:none;border-radius:6px;width:100%;cursor:pointer;">
+                    SAVE COSTUME
+                </button>
+                <div id="addLoadingBar"
+                    style="display:none;width:100%;height:5px;background:#ddd;border-radius:4px;margin-bottom:10px;">
+                    <div id="addLoadingFill"
+                        style="width:0%;height:100%;background:#31708f;border-radius:4px;transition:width 0.3s;">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div id="editCostumeModal" class="modal">
+        <div class="modal-card">
+            <span class="close" id="closeEditCostumeModal">&times;</span>
+            <h2>Edit Costume</h2>
+
+            <form id="editCostumeForm" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <input type="hidden" name="id" id="editCostumeID">
+
+                <label>Update Name:</label>
+                <input type="text" name="name" id="editCostumeName" style="width:100%;padding:8px;margin-bottom:10px;"
+                    required>
+                <label>Status:</label>
+                <select name="status" id="editStatus" style="width:100%;padding:8px;margin-bottom:10px;">
+                    <option value="borrowed">Borrowed</option>
+                    <option value="returned">Returned</option>
+                    <option value="lost">Lost</option>
+                </select>
+
+                <label>Update Image:</label>
+                <input type="file" name="image"  accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;">
+
+                <button type="submit"
+                    style="background:#f5a623;color:white;padding:8px 12px;border:none;border-radius:6px;width:100%;cursor:pointer;">
+                    UPDATE COSTUME
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {{-- View Costume Modal --}}
+    <div id="costumeModal" class="modal">
+        <div class="modal-card">
+            <span class="close" id="closeCostumeModal">&times;</span>
+            <h2 id="costumeModalTitle"></h2>
+            <p><b>Status:</b> <span id="costumeModalStatus"></span></p>
+            <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
+            <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
+            <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
+            <img src="" id="ViewCostumeModalImage">
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-card {
+            background-color: #fff;
+            margin: 8% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+    </style>
+@endsection
+
+@push('scripts')
+    <script>
+        // ---------------- ADD COSTUME ----------------
+        const addModal = document.getElementById('addCostumeModal');
+        document.getElementById('openAddCostumeModal').onclick = () => addModal.style.display = 'block';
+        document.getElementById('closeAddCostumeModal').onclick = () => addModal.style.display = 'none';
+
+        // ---------------- ADD COSTUME ----------------
+        document.getElementById('addCostumeForm').addEventListener('submit', e => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const loadingBar = document.getElementById('addLoadingBar');
+            const loadingFill = document.getElementById('addLoadingFill');
+
+            // Show loading bar
+            loadingBar.style.display = 'block';
+            loadingFill.style.width = '10%';
+
+            // Slowly animate to 70% while waiting for fetch
+            let progress = 10;
+            const interval = setInterval(() => {
+                if (progress < 70) {
+                    progress += 5;
+                    loadingFill.style.width = progress + "%";
+                }
+            }, 200);
+
+            fetch('/costumes', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(() => {
+                    // Finish loading animation
+                    clearInterval(interval);
+                    loadingFill.style.width = "100%";
+
+                    setTimeout(() => {
+                        loadingBar.style.display = 'none';
+                        loadingFill.style.width = "0%";
+                        location.reload();
+                    }, 300);
+                })
+                .catch(() => {
+                    clearInterval(interval);
+                    loadingFill.style.background = "red";
+                    loadingFill.style.width = "100%";
+
+                    setTimeout(() => {
+                        loadingFill.style.width = "0%";
+                        loadingBar.style.display = "none";
+                        alert("Failed to save costume. Try again.");
+                    }, 700);
+                });
+        });
+
+
+        // ---------------- EDIT COSTUME ----------------
+        const editModal = document.getElementById('editCostumeModal');
+        document.getElementById('closeEditCostumeModal').onclick = () => editModal.style.display = 'none';
+
+        document.querySelectorAll('.edit-costume-btn').forEach(btn => {
+            btn.onclick = () => {
+                fetch(`/costumes/${btn.dataset.id}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        document.getElementById('editCostumeID').value = data.id;
+                        document.getElementById('editCostumeName').value = data.name;
+                        document.getElementById('editStatus').value = data.status; 
+                        editModal.style.display = 'block';
+                    });
+            };
+        });
+
+        document.getElementById('editCostumeForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('editCostumeID').value;
+            const formData = new FormData(e.target);
+
+            fetch(`/costumes/${id}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(() => location.reload());
+        });
+
+        // ---------------- DELETE COSTUME ----------------
+        document.querySelectorAll('.delete-costume-btn').forEach(btn => {
+            btn.onclick = () => {
+                if (!confirm('Delete this costume?')) return;
+
+                fetch(`/costumes/${btn.dataset.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }).then(() => location.reload());
+            };
+        });
+
+        const modal = document.getElementById('costumeModal');
+        const closeBtn = document.getElementById('closeCostumeModal');
+
+        document.querySelectorAll('.view-costume-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                fetch(`/costumes/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('costumeModalTitle').textContent = 'Costume #' + data
+                            .id;
+                        document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
+                        document.getElementById('costumeModalReturned').textContent = data
+                            .date_returned ?? '—';
+                        document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
+                        document.getElementById('costumeModalComplied').textContent = data
+                            .date_complied ?? '—';
+                        document.getElementById('ViewCostumeModalImage').src = data.img;
+
+                            
+                        modal.style.display = 'block';
+
+                    });
+            });
+        });
+
+        closeBtn.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+    </script>
+@endpush

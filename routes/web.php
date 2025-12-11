@@ -5,6 +5,7 @@ use App\Http\Controllers\CostumeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventHighlightsController;
+use App\Http\Controllers\PerformerCostumeController;
 use App\Http\Controllers\UserController;
 use Google\Client;
 use Illuminate\Support\Facades\Route;
@@ -93,9 +94,20 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('auth');
     Route::get('/performer/attendance', [AttendanceController::class, 'index'])->name('performer.attendance');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::resource('costumes', CostumeController::class);
-    Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status');
-    Route::get('/costumes/{costume}', [CostumeController::class, 'index'])->name('costume.status');
+
+     
+    Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status'); 
+    Route::get('/costumes/{id}', [CostumeController::class, 'show']);
+    Route::post('/costumes', [CostumeController::class, 'store']);
+    Route::post('/costumes/{id}', [CostumeController::class, 'update']); // PUT via formData
+    Route::delete('/costumes/{id}', [CostumeController::class, 'destroy']);
+    // Performer costume actions
+Route::get('/performer/costume/{id}', [PerformerCostumeController::class, 'show']);
+Route::post('/performer/costume/{id}/borrow', [PerformerCostumeController::class, 'borrow']);
+Route::post('/performer/costume/{id}/return', [PerformerCostumeController::class, 'returnCostume']);
+Route::post('/performer/costume/{id}/lost', [PerformerCostumeController::class, 'lost']);
+
+
     Route::get('/manage-costume', [CostumeController::class, 'index'])->name('manage-costume');
     Route::get('/costume/{costume}/edit', [CostumeController::class, 'edit'])->name('edit-costume');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');

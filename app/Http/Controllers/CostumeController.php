@@ -5,45 +5,61 @@ namespace App\Http\Controllers;
 use App\Models\Costume;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CostumeController extends Controller
 {
     public function index()
     {
         $performers = User::with('costumes')->get();
+        $costumes = Costume::whereDoesntHave('user')->get();
+        $user = Auth::user();
+        if (! in_array($user->type, ['admin', 'manager'])) {
+            return view('performer.manage-costume', compact('performers'));
+        }
 
-        return view('manage-costume', compact('performers'));
+        return view('admin.manage-costume', compact('performers', 'costumes'));
     }
- 
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate([
-            'event_id' => 'nullable|integer',
-            'status' => 'required|string',
+        $imagePath = $req->file('image')->store('costumes', 'public');
+
+        $costume = Costume::create([
+            'name' => $req->name,
+            'status' => 'returned',
+            'img' => $imagePath,
         ]);
 
-        Costume::create($request->all());
-
-        return redirect()->route('costumes.index')->with('success', 'Costume added successfully!');
+        return response()->json($costume);
     }
 
-    public function show(Costume $costume)
+    public function show($id)
     {
-        return response()->json($costume); // For modal view
+        return Costume::findOrFail($id);
     }
 
-    public function update(Request $request, Costume $costume)
+    public function update(Request $req, $id)
     {
-        $costume->update($request->all());
+        $costume = Costume::findOrFail($id);
+        $costume->status = $req->status;
+        $costume->name = $req->name;
 
-        return redirect()->route('costumes.index')->with('success', 'Costume updated successfully!');
+        if ($req->hasFile('image')) {
+            $imagePath = $req->file('image')->store('costumes', 'public');
+            $costume->img = $imagePath;
+        }
+
+        $costume->save();
+
+        return response()->json($costume);
     }
 
-    public function destroy(Costume $costume)
+    public function destroy($id)
     {
+        $costume = Costume::findOrFail($id);
         $costume->delete();
 
-        return redirect()->route('costumes.index')->with('success', 'Costume removed!');
+        return response()->json(['message' => 'deleted']);
     }
 }

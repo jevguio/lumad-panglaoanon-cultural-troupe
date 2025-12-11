@@ -10,9 +10,11 @@ class Costume extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'status',
         'date_returned',
         'date_lost',
+        'img',
         'date_complied',
     ];
     public function user()

@@ -54,7 +54,7 @@
         <div class=" justify-content-between align-items-center mb-3"
             style="padding:0px 50px; text-align: center;margin-bottom:15px;">
             <p class="mb-0">Overview of available costumes</p>
-            <a href="{{ route('costumes.store') }}" class="btn btn-dark"  style="margin:10px;">Add Costume</a>
+            <a href="{{ route('manage-costume') }}" class="btn btn-dark"  style="margin:10px;">Add Costume</a>
         </div>
         <div class="row mb-5" style="padding:0px 50px;">
             @forelse($costumes as $costume)
