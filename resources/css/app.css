@@ -3,7 +3,9 @@
   --maroon: #7a1919;
   --softpink: #f0dcdb;
 }
-
+html, body{
+  overflow-x: hidden;
+}
 body {
   width: 100%;
 }
