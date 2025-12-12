@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class=" " style="width: 100%;">
+    <div class=" " style="flex:1;">
 
         {{-- Welcome Section --}}
         <div class="p-5    text-white  text-center"
@@ -60,10 +60,11 @@
             @forelse($costumes as $costume)
                 <div class="col-md-4 mb-3">
                     <div class="card">
-                        @if ($costume->image)
-                            <img src="{{ asset('storage/' . $costume->image) }}" class="card-img-top"
+                        @if ($costume->img)
+                            <img src="{{ asset('storage/' . $costume->img) }}" class="card-img-top"
                                 style="height:250px; object-fit:cover;">
                         @endif
+                        {{ $costume }}
                         <div class="card-body text-center">
                             <h5>{{ $costume->name }}</h5>
                             <p class="text-muted">{{ ucfirst($costume->status) }}</p>
