@@ -16,9 +16,9 @@ class PerformerCostumeController extends Controller
     {
         $costume = Costume::findOrFail($id);
 
-        if ($costume->status === 'borrowed') {
-            return response()->json(['error' => 'Already borrowed'], 400);
-        }
+        // if ($costume->status === 'borrowed') {
+        //     return response()->json(['error' => 'Already borrowed'], 400);
+        // }
 
         $costume->status = 'borrowed';
         $costume->date_complied = now();

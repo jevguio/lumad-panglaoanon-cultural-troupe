@@ -15,7 +15,7 @@ class CostumeController extends Controller
         $costumes = Costume::whereDoesntHave('user')->get();
         $user = Auth::user();
         if (! in_array($user->type, ['admin', 'manager'])) {
-            return view('performer.manage-costume', compact('performers'));
+            return view('performer.manage-costume', compact('performers', 'costumes'));
         }
 
         return view('admin.manage-costume', compact('performers', 'costumes'));
