@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Costume;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PerformerCostumeController extends Controller
 {
@@ -20,7 +21,8 @@ class PerformerCostumeController extends Controller
         //     return response()->json(['error' => 'Already borrowed'], 400);
         // }
 
-        $costume->status = 'borrowed';
+        $costume->status = 'borrowed'; 
+        $costume->user_id = Auth::id(); // 👈 assign borrower
         $costume->date_complied = now();
         $costume->save();
 
