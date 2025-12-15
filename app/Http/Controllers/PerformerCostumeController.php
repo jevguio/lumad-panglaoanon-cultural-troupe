@@ -35,6 +35,7 @@ class PerformerCostumeController extends Controller
 
         $costume->status = 'returned';
         $costume->date_returned = now();
+        $costume->user_id =null; // 👈 assign borrower
         $costume->save();
 
         return response()->json(['message' => 'Costume returned']);
