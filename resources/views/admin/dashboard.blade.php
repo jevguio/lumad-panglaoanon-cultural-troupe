@@ -63,8 +63,7 @@
                         @if ($costume->img)
                             <img src="{{ asset('storage/' . $costume->img) }}" class="card-img-top"
                                 style="height:250px; object-fit:cover;">
-                        @endif
-                        {{ $costume }}
+                        @endif 
                         <div class="card-body text-center">
                             <h5>{{ $costume->name }}</h5>
                             <p class="text-muted">{{ ucfirst($costume->status) }}</p>
