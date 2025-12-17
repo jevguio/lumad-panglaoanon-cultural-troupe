@@ -344,7 +344,7 @@
 
                             (data.report_img || []).forEach(img => {
                                 const image = document.createElement('img');
-                                image.src = `/storage/${img}`;
+                                image.src = `/${img}`;
                                 image.style.width = '100px';
                                 image.style.borderRadius = '6px';
                                 imgContainer.appendChild(image);
