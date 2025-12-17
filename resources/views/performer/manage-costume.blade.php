@@ -26,11 +26,12 @@
                                         style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px;">
                                         VIEW
                                     </button>
-
-                                    <button class="costume-action-btn" data-id="{{ $costume->id }}"
-                                        style="background:#31708f; color:white; border:none; padding:5px 10px; border-radius:4px;">
-                                        ACTION
-                                    </button>
+                                    @if ($costume->status != 'lost')
+                                        <button class="costume-action-btn" data-id="{{ $costume->id }}"
+                                            style="background:#31708f; color:white; border:none; padding:5px 10px; border-radius:4px;">
+                                            ACTION
+                                        </button>
+                                    @endif
                                 </td>
 
                                 <td style="padding:8px; border:1px solid #ddd; text-align:center;">
@@ -209,7 +210,7 @@
                     .then(r => r.json()).
                 then(data => {
                     document.getElementById('costumeModalTitle').textContent = "Costume #" + data
-                    .id;
+                        .id;
                     document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
                     document.getElementById('costumeModalReturned').textContent = data
                         .date_returned ?? '—';
