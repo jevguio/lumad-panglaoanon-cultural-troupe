@@ -97,10 +97,10 @@ Route::middleware(['auth'])->group(function () {
 
      
     Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status'); 
-    Route::get('/costumes/{id}', [CostumeController::class, 'show']);
-    Route::post('/costumes', [CostumeController::class, 'store']);
-    Route::post('/costumes/{id}', [CostumeController::class, 'update']); // PUT via formData
-    Route::delete('/costumes/{id}', [CostumeController::class, 'destroy']);
+    Route::get('/admin/costumes/{id}', [CostumeController::class, 'show']);
+    Route::post('/admin/costumes', [CostumeController::class, 'store']);
+    Route::post('/admin/costumes/{id}', [CostumeController::class, 'update']); // PUT via formData
+    Route::delete('/admin/costumes/{id}', [CostumeController::class, 'destroy']);
     // Performer costume actions
 Route::get('/performer/costume/{id}', [PerformerCostumeController::class, 'show']);
 Route::post('/performer/costume/{id}/borrow', [PerformerCostumeController::class, 'borrow']);

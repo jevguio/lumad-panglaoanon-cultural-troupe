@@ -230,7 +230,7 @@
                 }
             }, 200);
 
-            fetch('/costumes', {
+            fetch('/admin/costumes', {
                     method: 'POST',
                     body: formData
                 })
@@ -266,7 +266,7 @@
 
         document.querySelectorAll('.edit-costume-btn').forEach(btn => {
             btn.onclick = () => {
-                fetch(`/costumes/${btn.dataset.id}`)
+                fetch(`/admin/costumes/${btn.dataset.id}`)
                     .then(r => r.json())
                     .then(data => {
                         document.getElementById('editCostumeID').value = data.id;
@@ -282,7 +282,7 @@
             const id = document.getElementById('editCostumeID').value;
             const formData = new FormData(e.target);
 
-            fetch(`/costumes/${id}`, {
+            fetch(`/admin/costumes/${id}`, {
                     method: 'POST',
                     body: formData
                 })
@@ -294,7 +294,7 @@
             btn.onclick = () => {
                 if (!confirm('Delete this costume?')) return;
 
-                fetch(`/costumes/${btn.dataset.id}`, {
+                fetch(`/admin/costumes/${btn.dataset.id}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -309,7 +309,7 @@
         document.querySelectorAll('.view-costume-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
-                fetch(`/costumes/${id}`)
+                fetch(`/admin/costumes/${id}`)
                     .then(res => res.json())
                     .then(data => {
                         document.getElementById('costumeModalTitle').textContent = 'Costume #' + data
