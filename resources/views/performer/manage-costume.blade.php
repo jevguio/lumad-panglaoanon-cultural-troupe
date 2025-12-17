@@ -6,7 +6,7 @@
     @foreach ($performers as $performer)
         @if ($performer->id === Auth::user()->id)
             <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
-       
+
 
                 <table style="width:100%; border-collapse:collapse;">
                     <thead>
@@ -64,7 +64,7 @@
             <thead>
                 <tr style="background:#31708f;color:white; text-align:left;">
                     <th style="padding:8px; border:1px solid #ddd;">Costume ID</th>
-                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th> 
+                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@
                                 style="background:#31708f; color:white; border:none; padding:5px 10px; border-radius:4px;">
                                 ACTION
                             </button>
-                        </td> 
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -103,6 +103,16 @@
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
+            @foreach (json_decode($costume->report_img ?? '[]') as $img)
+                <img src="{{ asset('storage/' . $img) }}" width="100">
+            @endforeach
+            <div id="lostReportSection2" style="margin-top:10px; display:none;">
+                <p><b>Lost Report Images:</b></p>
+                <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+
+                <p style="margin-top:8px;"><b>Report Detail:</b></p>
+                <p id="costumeReportDetail"></p>
+            </div>
         </div>
     </div>
 
@@ -116,11 +126,18 @@
             <h2 id="actionModalTitle"></h2>
 
             <p><b>Status:</b> <span id="actionModalStatus"></span></p>
+            <div id="lostReportSection" style="margin-top:15px; ">
+                <label><b>Detailed Report</b></label>
+                <textarea id="reportDetail" rows="4" style="width:100%; padding:8px; margin-top:5px;"></textarea>
 
+                <label style="margin-top:10px;"><b>Upload Images</b></label>
+                <input type="file" id="reportImages" multiple accept="image/*" style="margin-top:5px;">
+            </div>
             <div style="margin-top:15px;">
                 <button id="borrowBtn" class="action-btn" style="background:#4CAF50;">BORROW</button>
                 <button id="returnBtn" class="action-btn" style="background:#2196F3;">RETURN</button>
                 <button id="lostBtn" class="action-btn" style="background:#f44336;">REPORT LOST</button>
+                <button id="CNFlostBtn" class="action-btn" style="background:#f44336;">CONFIRM LOST</button>
             </div>
         </div>
     </div>
@@ -176,22 +193,55 @@
         // -----------------------
         const modal = document.getElementById('costumeModal');
         const closeBtn = document.getElementById('closeCostumeModal');
+        const lostReportSection = document.getElementById('lostReportSection');
+        const lostBtn = document.getElementById('lostBtn');
+        const returnBtn = document.getElementById('returnBtn');
+        const CNFlostBtn = document.getElementById('CNFlostBtn');
+        lostBtn.onclick = () => {
+            lostReportSection.style.display = 'block';
+            lostBtn.style.display = 'none';
+            CNFlostBtn.style.display = 'block';
+        };
 
         document.querySelectorAll('.view-costume-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 fetch(`/performer/costume/${btn.dataset.id}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        document.getElementById('costumeModalTitle').textContent = "Costume #" + data
-                            .id;
-                        document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
-                        document.getElementById('costumeModalReturned').textContent = data
-                            .date_returned ?? '—';
-                        document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
-                        document.getElementById('costumeModalComplied').textContent = data
-                            .date_complied ?? '—';
-                        modal.style.display = 'block';
-                    });
+                    .then(r => r.json()).
+                then(data => {
+                    document.getElementById('costumeModalTitle').textContent = "Costume #" + data
+                    .id;
+                    document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
+                    document.getElementById('costumeModalReturned').textContent = data
+                        .date_returned ?? '—';
+                    document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
+                    document.getElementById('costumeModalComplied').textContent = data
+                        .date_complied ?? '—';
+
+                    const reportSection = document.getElementById('lostReportSection2');
+                    const imgContainer = document.getElementById('costumeReportImages');
+                    const detailContainer = document.getElementById('costumeReportDetail');
+
+                    imgContainer.innerHTML = '';
+                    detailContainer.textContent = '';
+
+                    if (data.status === 'lost') {
+                        reportSection.style.display = 'block';
+
+                        detailContainer.textContent = data.report_detail ?? '—';
+
+                        (data.report_img || []).forEach(img => {
+                            const image = document.createElement('img');
+                            image.src = `/storage/${img}`;
+                            image.style.width = '100px';
+                            image.style.borderRadius = '6px';
+                            imgContainer.appendChild(image);
+                        });
+                    } else {
+                        reportSection.style.display = 'none';
+                    }
+
+                    modal.style.display = 'block';
+                });
             });
         });
 
@@ -213,6 +263,19 @@
                 fetch(`/performer/costume/${selectedCostumeId}`)
                     .then(r => r.json())
                     .then(data => {
+                        if (data.status == "borrowed") {
+
+                            document.getElementById('borrowBtn').style.display = 'none';
+                            CNFlostBtn.style.display = 'none';
+                            lostReportSection.style.display = 'none';
+                        } else {
+
+                            document.getElementById('borrowBtn').style.display = 'block';
+                            CNFlostBtn.style.display = 'none';
+                            lostReportSection.style.display = 'none';
+                            lostBtn.style.display = 'none';
+                            returnBtn.style.display = 'none';
+                        }
                         document.getElementById('actionModalTitle').textContent = "Costume #" + data.id;
                         document.getElementById('actionModalStatus').textContent = data.status;
                         actionModal.style.display = 'block';
@@ -228,19 +291,37 @@
         // ACTION BUTTONS
         // -----------------------
         function updateCostumeAction(actionType) {
+
+            if (actionType === 'lost') {
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('report_detail', document.getElementById('reportDetail').value);
+
+                const files = document.getElementById('reportImages').files;
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('report_img[]', files[i]);
+                }
+
+                fetch(`/performer/costume/${selectedCostumeId}/lost`, {
+                    method: 'POST',
+                    body: formData
+                }).then(() => location.reload());
+
+                return;
+            }
+
+            // Normal actions
             fetch(`/performer/costume/${selectedCostumeId}/${actionType}`, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    }
-                })
-                .then(r => r.json())
-                .then(() => location.reload());
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            }).then(() => location.reload());
         }
 
         document.getElementById('borrowBtn').onclick = () => updateCostumeAction('borrow');
         document.getElementById('returnBtn').onclick = () => updateCostumeAction('return');
-        document.getElementById('lostBtn').onclick = () => updateCostumeAction('lost');
+        document.getElementById('CNFlostBtn').onclick = () => updateCostumeAction('lost');
 
         window.onclick = e => {
             if (e.target === modal) modal.style.display = 'none';

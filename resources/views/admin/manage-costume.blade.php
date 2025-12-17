@@ -62,7 +62,7 @@
             <thead>
                 <tr style="background:#31708f;color:white; text-align:left;">
                     <th style="padding:8px; border:1px solid #ddd;">Costume ID</th>
-                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th> 
+                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,7 +78,7 @@
                                 style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
                                 EDIT COSTUME
                             </button>
-                        </td> 
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -96,7 +96,7 @@
             <form id="addCostumeForm" enctype="multipart/form-data">
                 @csrf
                 <label>Costume Image:</label>
-                <input type="text" name="name" style="width:100%;padding:8px;margin-bottom:10px;" required> 
+                <input type="text" name="name" style="width:100%;padding:8px;margin-bottom:10px;" required>
 
                 <label>Costume Image:</label>
                 <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;"
@@ -138,7 +138,7 @@
                 </select>
 
                 <label>Update Image:</label>
-                <input type="file" name="image"  accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;">
+                <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;">
 
                 <button type="submit"
                     style="background:#f5a623;color:white;padding:8px 12px;border:none;border-radius:6px;width:100%;cursor:pointer;">
@@ -153,13 +153,22 @@
         <div class="modal-card">
             <span class="close" id="closeCostumeModal">&times;</span>
             <h2 id="costumeModalTitle"></h2>
+
             <p><b>Status:</b> <span id="costumeModalStatus"></span></p>
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
-            <img src="" id="ViewCostumeModalImage">
+
+            <div id="lostReportSection" style="margin-top:10px; display:none;">
+                <p><b>Lost Report Images:</b></p>
+                <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+
+                <p style="margin-top:8px;"><b>Report Detail:</b></p>
+                <p id="costumeReportDetail"></p>
+            </div>
         </div>
     </div>
+
 
     <style>
         .modal {
@@ -271,7 +280,7 @@
                     .then(data => {
                         document.getElementById('editCostumeID').value = data.id;
                         document.getElementById('editCostumeName').value = data.name;
-                        document.getElementById('editStatus').value = data.status; 
+                        document.getElementById('editStatus').value = data.status;
                         editModal.style.display = 'block';
                     });
             };
@@ -312,19 +321,39 @@
                 fetch(`/admin/costumes/${id}`)
                     .then(res => res.json())
                     .then(data => {
-                        document.getElementById('costumeModalTitle').textContent = 'Costume #' + data
-                            .id;
+                        document.getElementById('costumeModalTitle').textContent = "Costume #" + data
+                        .id;
                         document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
                         document.getElementById('costumeModalReturned').textContent = data
                             .date_returned ?? '—';
                         document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
                         document.getElementById('costumeModalComplied').textContent = data
                             .date_complied ?? '—';
-                        document.getElementById('ViewCostumeModalImage').src = data.img;
 
-                            
+                        const reportSection = document.getElementById('lostReportSection');
+                        const imgContainer = document.getElementById('costumeReportImages');
+                        const detailContainer = document.getElementById('costumeReportDetail');
+
+                        imgContainer.innerHTML = '';
+                        detailContainer.textContent = '';
+
+                        if (data.status === 'lost') {
+                            reportSection.style.display = 'block';
+
+                            detailContainer.textContent = data.report_detail ?? '—';
+
+                            (data.report_img || []).forEach(img => {
+                                const image = document.createElement('img');
+                                image.src = `/storage/${img}`;
+                                image.style.width = '100px';
+                                image.style.borderRadius = '6px';
+                                imgContainer.appendChild(image);
+                            });
+                        } else {
+                            reportSection.style.display = 'none';
+                        }
+
                         modal.style.display = 'block';
-
                     });
             });
         });

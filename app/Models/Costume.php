@@ -16,6 +16,8 @@ class Costume extends Model
         'date_lost',
         'img',
         'date_complied',
+        'report_detail',
+        'report_img'
     ];
     public function user()
     {

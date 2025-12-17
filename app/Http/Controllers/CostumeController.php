@@ -36,7 +36,16 @@ class CostumeController extends Controller
 
     public function show($id)
     {
-        return Costume::findOrFail($id);
+        $costume= Costume::findOrFail($id);
+        return response()->json([
+            'id' => $costume->id,
+            'status' => $costume->status,
+            'date_returned' => $costume->date_returned,
+            'date_lost' => $costume->date_lost,
+            'date_complied' => $costume->date_complied,
+            'report_detail' => $costume->report_detail,
+            'report_img' => json_decode($costume->report_img ?? '[]'),
+        ]);
     }
 
     public function update(Request $req, $id)
