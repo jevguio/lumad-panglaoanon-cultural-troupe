@@ -40,9 +40,9 @@ background-color: {{ $bgColor }} !important;">
                     <a href="{{ route('performer.history') }}">
                         <img src="{{ asset('icons/Historical.png') }}" style="width:30px;  border: none;"> </a>
                 </li>
-                <li class="{{ request()->is('costume/status') ? 'active' : '' }}"
-                    data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('costume.status') }}">
+                <li class="{{ request()->is('manage-costume') ? 'active' : '' }}"
+                    data-link="{{ route('manage-costume') }}">
+                    <a href="{{ route('manage-costume') }}">
 
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;"> </a>
                 </li>

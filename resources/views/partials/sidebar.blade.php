@@ -67,9 +67,9 @@ background-color: {{ $bgColor }} !important;">
                         <img src="{{ asset('icons/Historical.png') }}" style="width:30px;  border: none;">
                         <span>Performer History</span></a>
                 </li>
-                <li class="{{ request()->is('costume/status') ? 'active' : '' }}"
-                    data-link="{{ route('my.schedule') }}">
-                    <a href="{{ route('costume.status') }}">
+                <li class="{{ request()->is('manage-costume') ? 'active' : '' }}"
+                    data-link="{{ route('manage-costume') }}">
+                    <a href="{{ route('manage-costume') }}">
 
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
                         <span>Costume Status</span></a>
