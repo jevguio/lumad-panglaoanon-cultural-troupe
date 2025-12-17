@@ -105,7 +105,7 @@
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
             @foreach (json_decode($costume->report_img ?? '[]') as $img)
-                <img src="{{ asset('storage/' . $img) }}" width="100">
+                <img src="{{ asset( $img) }}" width="100">
             @endforeach
             <div id="lostReportSection2" style="margin-top:10px; display:none;">
                 <p><b>Lost Report Images:</b></p>
