@@ -104,6 +104,7 @@
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
+            <img id="costumeModalPreviewIMG"   width="100">
             @foreach (json_decode($costume->report_img ?? '[]') as $img)
                 <img src="{{ asset( $img) }}" width="100">
             @endforeach
@@ -232,13 +233,18 @@
 
                         (data.report_img || []).forEach(img => {
                             const image = document.createElement('img');
-                            image.src = `/storage/${img}`;
+                            image.src = `/${img}`;
                             image.style.width = '100px';
                             image.style.borderRadius = '6px';
                             imgContainer.appendChild(image);
                         });
                     } else {
                         reportSection.style.display = 'none';
+                            const image = document.createElement('img');
+                            image.src = `/${img}`;
+                            image.style.width = '100px';
+                            image.style.borderRadius = '6px';
+                            imgContainer.appendChild(data.img);
                     }
 
                     modal.style.display = 'block';
