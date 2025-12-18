@@ -159,6 +159,7 @@
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
 
+            <div id="costumeModalPreviewIMG"   > </div>
             <div id="lostReportSection" style="margin-top:10px; display:none;">
                 <p><b>Lost Report Images:</b></p>
                 <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -322,7 +323,7 @@
                     .then(res => res.json())
                     .then(data => {
                         document.getElementById('costumeModalTitle').textContent = "Costume #" + data
-                        .id;
+                            .id;
                         document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
                         document.getElementById('costumeModalReturned').textContent = data
                             .date_returned ?? '—';
@@ -332,6 +333,8 @@
 
                         const reportSection = document.getElementById('lostReportSection');
                         const imgContainer = document.getElementById('costumeReportImages');
+                        const costumeModalPreviewIMG = document.getElementById(
+                        'costumeModalPreviewIMG');
                         const detailContainer = document.getElementById('costumeReportDetail');
 
                         imgContainer.innerHTML = '';
@@ -351,6 +354,14 @@
                             });
                         } else {
                             reportSection.style.display = 'none';
+                            if (data.img) {
+
+                                const image = document.createElement('img');
+                                image.src = `/${data.img}`;
+                                image.style.width = '100px';
+                                image.style.borderRadius = '6px';
+                                costumeModalPreviewIMG.appendChild(image);
+                            }
                         }
 
                         modal.style.display = 'block';
