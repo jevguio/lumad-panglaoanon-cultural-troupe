@@ -40,6 +40,40 @@
                 </div>
             @endforeach
 
+            @foreach ($otherEvents as $event)
+            <div style="border:1px solid #ccc;padding:10px;border-radius:6px;">
+                <strong>Event ID:</strong> {{ $event->id }} <br>
+                <strong>Title:</strong> {{ $event->title }} <br>
+
+                {{-- Grid container --}}
+                <div
+                    style="
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+    ">
+                    @foreach ($event->highlights as $highlight)
+                        @foreach ($highlight->files as $file)
+                            <div style="width: 100%;">
+                                <a href="{{ asset($file->paths) }}">
+                                    @if ($file->type === 'image')
+                                        <img src="{{ asset( $file->paths) }}"
+                                            style="width: 100%; height: auto; border-radius:4px;">
+                                    @elseif ($file->type === 'video')
+                                        <video src="{{ asset( $file->paths) }}" controls
+                                            style="width: 100%; height: auto; border-radius:4px;">
+                                        </video>
+                                    @endif
+                                </a>
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
+
+            </div>
+        @endforeach
+
         </div>
     </div>
 
