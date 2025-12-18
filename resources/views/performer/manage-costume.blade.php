@@ -241,10 +241,10 @@
                     } else {
                         reportSection.style.display = 'none';
                             const image = document.createElement('img');
-                            image.src = `/${img}`;
+                            image.src = `/${data.img}`;
                             image.style.width = '100px';
                             image.style.borderRadius = '6px';
-                            imgContainer.appendChild(data.img);
+                            imgContainer.appendChild(image);
                     }
 
                     modal.style.display = 'block';
