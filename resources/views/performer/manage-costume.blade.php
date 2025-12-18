@@ -221,6 +221,7 @@
                     const costumeModalPreviewIMG = document.getElementById('costumeModalPreviewIMG');
                     const detailContainer = document.getElementById('costumeReportDetail');
 
+                    costumeModalPreviewIMG.innerHTML = '';
                     imgContainer.innerHTML = '';
                     detailContainer.textContent = '';
 
