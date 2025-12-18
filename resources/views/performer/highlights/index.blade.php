@@ -22,12 +22,12 @@
                         @foreach ($event->highlights as $highlight)
                             @foreach ($highlight->files as $file)
                                 <div style="width: 100%;">
-                                    <a href="{{ asset('storage/' . $file->paths) }}">
+                                    <a href="{{ asset($file->paths) }}">
                                         @if ($file->type === 'image')
-                                            <img src="{{ asset('storage/' . $file->paths) }}"
+                                            <img src="{{ asset( $file->paths) }}"
                                                 style="width: 100%; height: auto; border-radius:4px;">
                                         @elseif ($file->type === 'video')
-                                            <video src="{{ asset('storage/' . $file->paths) }}" controls
+                                            <video src="{{ asset( $file->paths) }}" controls
                                                 style="width: 100%; height: auto; border-radius:4px;">
                                             </video>
                                         @endif
