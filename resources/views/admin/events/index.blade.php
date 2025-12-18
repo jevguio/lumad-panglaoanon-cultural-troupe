@@ -90,7 +90,7 @@
                 @foreach ($otherEvents as $event)
                     <div class="card" data-id="{{ $event->id }}">
                         <div style="display:flex;justify-content:space-between;align-items:center">
-                            <div style="font-weight:700">EVENT ID: {{ $event->title }}</div>
+                            <div style="font-weight:700">EVENT ID: {{ $event->id }} - {{ $event->title }}</div>
                             <div style="font-size:12px">Mode: {{ $event->mode }}</div>
                         </div>
 

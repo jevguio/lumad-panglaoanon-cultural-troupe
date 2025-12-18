@@ -38,7 +38,7 @@
 
                 @foreach ($otherEvents as $event)
                     <div class="card" data-id="{{ $event->id }}">
-                        <div class="event-meta">EVENT ID: {{ $event->title }}</div>
+                        <div class="event-meta">EVENT ID: {{ $event->id }} - {{ $event->title }}</div>
                         <div class="event-meta">MODE: {{ $event->mode }}</div>
 
                         <div>
