@@ -333,8 +333,7 @@
 
                         const reportSection = document.getElementById('lostReportSection');
                         const imgContainer = document.getElementById('costumeReportImages');
-                        const costumeModalPreviewIMG = document.getElementById(
-                        'costumeModalPreviewIMG');
+                        const costumeModalPreviewIMG = document.getElementById('costumeModalPreviewIMG');
                         const detailContainer = document.getElementById('costumeReportDetail');
 
                         costumeModalPreviewIMG.innerHTML = '';
