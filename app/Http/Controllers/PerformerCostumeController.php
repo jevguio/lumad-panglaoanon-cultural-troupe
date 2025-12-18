@@ -14,6 +14,7 @@ class PerformerCostumeController extends Controller
         return response()->json([
             'id' => $costume->id,
             'status' => $costume->status,
+            'img' => $costume->img,
             'date_returned' => $costume->date_returned,
             'date_lost' => $costume->date_lost,
             'date_complied' => $costume->date_complied,
