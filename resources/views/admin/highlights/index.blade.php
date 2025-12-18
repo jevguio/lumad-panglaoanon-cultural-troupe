@@ -144,14 +144,14 @@
 
             if (type === 'image') {
                 const img = document.createElement('img');
-                img.src = isExisting ? `/storage/${src}` : URL.createObjectURL(src);
+                img.src = isExisting ? `/${src}` : URL.createObjectURL(src);
                 img.style.width = '100%';
                 img.style.height = '100%';
                 img.style.objectFit = 'cover';
                 wrapper.appendChild(img);
             } else {
                 const vid = document.createElement('video');
-                vid.src = isExisting ? `/storage/${src}` : URL.createObjectURL(src);
+                vid.src = isExisting ? `/${src}` : URL.createObjectURL(src);
                 vid.style.width = '100%';
                 vid.style.height = '100%';
                 vid.controls = true;
