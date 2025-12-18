@@ -21,6 +21,18 @@
                 </div>
             @endforeach
         </div>
+        <h4 class="mt-4">OTHER EVENTS</h4>
+        <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;">
+            @foreach ($otherEvents as $event)
+                <div style="border:1px solid #ccc;padding:10px;border-radius:6px;">
+                    <strong>Event ID:</strong> {{ $event->id }} <br>
+                    <strong>Title:</strong> {{ $event->title }} <br>
+                    <button
+                        onclick="openHighlightModal({{ $event->id }}, {{ $event->highlights->first()->id ?? 'null' }})"
+                        style="background:#4CAF50;color:white;border:none;padding:4px 8px;margin-top:5px;">EDIT</button>
+                </div>
+            @endforeach
+        </div>
     </div>
 
     <!-- MODAL -->
