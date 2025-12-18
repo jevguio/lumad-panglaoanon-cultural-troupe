@@ -104,10 +104,7 @@
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
-            <img id="costumeModalPreviewIMG"   width="100">
-            @foreach (json_decode($costume->report_img ?? '[]') as $img)
-                <img src="{{ asset( $img) }}" width="100">
-            @endforeach
+            <div id="costumeModalPreviewIMG"   > </div>
             <div id="lostReportSection2" style="margin-top:10px; display:none;">
                 <p><b>Lost Report Images:</b></p>
                 <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -221,6 +218,7 @@
 
                     const reportSection = document.getElementById('lostReportSection2');
                     const imgContainer = document.getElementById('costumeReportImages');
+                    const costumeModalPreviewIMG = document.getElementById('costumeModalPreviewIMG');
                     const detailContainer = document.getElementById('costumeReportDetail');
 
                     imgContainer.innerHTML = '';
@@ -244,7 +242,7 @@
                             image.src = `/${data.img}`;
                             image.style.width = '100px';
                             image.style.borderRadius = '6px';
-                            imgContainer.appendChild(image);
+                            costumeModalPreviewIMG.appendChild(image);
                     }
 
                     modal.style.display = 'block';
