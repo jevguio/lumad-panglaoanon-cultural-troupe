@@ -5,7 +5,7 @@
         <h2 class="mb-3" style="color:#8B0000;">EVENT HIGHLIGHTS</h2>
 
         <h4 class="mt-4">SHOW EVENTS</h4>
-        <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(50%,100%));gap:10px;">
+        <div class="grid" style="display:grid;grid-template-columns:repeat(2,minmax(50%,100%));gap:10px;">
             @foreach ($showEvents as $event)
                 <div style="border:1px solid #ccc;padding:10px;border-radius:6px;">
                     <strong>Event ID:</strong> {{ $event->id }} <br>
@@ -15,7 +15,7 @@
                     <div
                         style="
             display: grid;
-            grid-template-columns: repeat(1, 1.4fr);
+            grid-template-columns: repeat(2, 1.4fr);
             gap: 10px;
             margin-top: 10px;
         ">
@@ -49,7 +49,7 @@
                 <div
                     style="
         display: grid;
-        grid-template-columns: repeat(1, 1.4fr);
+        grid-template-columns: repeat(2, 1.4fr);
         gap: 10px;
         margin-top: 10px;
     ">
