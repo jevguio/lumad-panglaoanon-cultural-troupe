@@ -22,7 +22,7 @@
                         @foreach ($event->highlights as $highlight)
                             @foreach ($highlight->files as $file)
                                 <div style="width: 100%;">
-                                    <a href="{{ asset($file->paths) }}">
+                                    <a href="{{ asset($file->paths) }}"  style="width: 100%;">
                                         @if ($file->type === 'image')
                                             <img src="{{ asset( $file->paths) }}"
                                                 style="width: 100%; height: auto; border-radius:4px;">
