@@ -95,20 +95,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/performer/attendance', [AttendanceController::class, 'index'])->name('performer.attendance');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
 
-     
-    Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status'); 
+    Route::get('/costumes', [CostumeController::class, 'index'])->name('costume.status');
     Route::get('/admin/costumes/{id}', [CostumeController::class, 'show']);
     Route::post('/admin/costumes', [CostumeController::class, 'store']);
     Route::post('/admin/costumes/{id}', [CostumeController::class, 'update']); // PUT via formData
     Route::delete('/admin/costumes/{id}', [CostumeController::class, 'destroy']);
     // Performer costume actions
-Route::get('/performer/costume/{id}', [PerformerCostumeController::class, 'show']);
-Route::post('/performer/costume/{id}/borrow', [PerformerCostumeController::class, 'borrow']);
-Route::post('/performer/costume/{id}/return', [PerformerCostumeController::class, 'returnCostume']);
-Route::post('/performer/costume/{id}/lost', [PerformerCostumeController::class, 'lost']);
-
+    Route::get('/performer/costume/{id}', [PerformerCostumeController::class, 'show']);
+    Route::post('/performer/costume/{id}/borrow', [PerformerCostumeController::class, 'borrow']);
+    Route::post('/performer/costume/{id}/return', [PerformerCostumeController::class, 'returnCostume']);
+    Route::post('/performer/costume/{id}/lost', [PerformerCostumeController::class, 'lost']);
 
     Route::get('/manage-costume', [CostumeController::class, 'index'])->name('manage-costume');
+    Route::get('/status-costume', [CostumeController::class, 'index'])->name('status-costume');
     Route::get('/costume/{costume}/edit', [CostumeController::class, 'edit'])->name('edit-costume');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance/{event}/{user}', [AttendanceController::class, 'update'])->name('attendance.update');
