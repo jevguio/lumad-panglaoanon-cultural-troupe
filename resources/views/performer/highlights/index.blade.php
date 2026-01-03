@@ -49,7 +49,7 @@
                 <div
                     style="
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(1, 1.4fr);
         gap: 10px;
         margin-top: 10px;
     ">
