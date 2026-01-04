@@ -20,13 +20,20 @@ class CostumeController extends Controller
 
         return view('admin.manage-costume', compact('performers', 'costumes'));
     }
+    public function view()
+    {
+        $performers = User::with('costumes')->get();
+        $costumes = Costume::whereDoesntHave('user')->get();
+
+        return view('admin.view-costume', compact('performers', 'costumes'));
+    }
     public function status()
     {
         $performers = User::with('costumes')->get();
         $costumes = Costume::whereDoesntHave('user')->get();
         $user = Auth::user();
         // if (! in_array($user->type, ['admin', 'manager'])) {
-            return view('performer.manage-costume', compact('performers', 'costumes'));
+        return view('performer.manage-costume', compact('performers', 'costumes'));
         // }
 
         // return view('admin.manage-costume', compact('performers', 'costumes'));
@@ -47,7 +54,7 @@ class CostumeController extends Controller
 
     public function show($id)
     {
-        $costume= Costume::findOrFail($id);
+        $costume = Costume::findOrFail($id);
         return response()->json([
             'id' => $costume->id,
             'status' => $costume->status,

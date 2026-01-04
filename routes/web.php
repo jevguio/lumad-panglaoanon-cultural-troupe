@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/performer/costume/{id}/return', [PerformerCostumeController::class, 'returnCostume']);
     Route::post('/performer/costume/{id}/lost', [PerformerCostumeController::class, 'lost']);
 
+    Route::get('/view-costume', [CostumeController::class, 'view'])->name('view-costume');
     Route::get('/manage-costume', [CostumeController::class, 'index'])->name('manage-costume');
     Route::get('/status-costume', [CostumeController::class, 'index'])->name('status-costume');
     Route::get('/costume/{costume}/edit', [CostumeController::class, 'edit'])->name('edit-costume');

@@ -67,20 +67,20 @@ background-color: {{ $bgColor }} !important;">
                         <img src="{{ asset('icons/Historical.png') }}" style="width:30px;  border: none;">
                         <span>Performer History</span></a>
                 </li>
-                <li class="{{ request()->is('manage-costume') ? 'active' : '' }}"
-                    data-link="{{ route('manage-costume') }}">
-                    <a href="{{ route('manage-costume') }}">
+                <li class="{{ request()->is('view-costume') ? 'active' : '' }}"
+                    data-link="{{ route('view-costume') }}">
+                    <a href="{{ route('view-costume') }}">
 
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
-                        <span>Manage Costume</span></a>
+                        <span>View Costume</span></a>
                 </li>
-                <li class="{{ request()->is('status-costume') ? 'active' : '' }}"
+                {{-- <li class="{{ request()->is('status-costume') ? 'active' : '' }}"
                     data-link="{{ route('status-costume') }}">
                     <a href="{{ route('status-costume') }}">
 
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
                         <span>Costume Status</span></a>
-                </li>
+                </li> --}}
                 <li class="{{ request()->is('users') ? 'active' : '' }}" data-link="{{ route('my.schedule') }}">
                     <a href="{{ route('users.index') }}">
                         <img src="{{ asset('icons/Person.png') }}" style="width:30px;  border: none;">
