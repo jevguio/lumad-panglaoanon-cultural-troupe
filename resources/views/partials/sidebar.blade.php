@@ -140,8 +140,116 @@ background-color: {{ $bgColor }} !important;">
                 </li>
             @endif
         </ul>
-        <div class="logout targ">
+        {{-- <div class="logout targ">
             <a href="{{ route('logout') }}" style="text-decoration: none;color:white">Logout</a>
+        </div> --}}
+        <div class="logout targ">
+            <a href="#" id="logoutBtn" style="text-decoration:none;color:white; flex: 1;">Logout</a>
         </div>
+
     </nav>
+   <div id="logoutModal" class="logout-modal">
+        <div class="logout-box">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out?</p>
+
+            <div class="logout-actions">
+                <button id="cancelLogout">Cancel</button>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="danger">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 </div>
+<style>
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+.logout-box {
+    background: #111827;
+    color: white;
+    padding: 24px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    animation: pop .2s ease-out;
+}
+
+.logout-box h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+
+.logout-box p {
+    opacity: .8;
+    margin-bottom: 20px;
+}
+
+.logout-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.logout-actions button {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.logout-actions button:first-child {
+    background: #374151;
+    color: white;
+}
+
+.logout-actions .danger {
+    background: #dc2626;
+    color: white;
+}
+
+.logout-actions button:hover {
+    opacity: .85;
+}
+
+@keyframes pop {
+    from { transform: scale(.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+const modal = document.getElementById('logoutModal');
+const openBtn = document.getElementById('logoutBtn');
+const cancelBtn = document.getElementById('cancelLogout');
+
+openBtn.addEventListener('click', e => {
+    e.preventDefault();
+    modal.style.display = "flex";
+});
+
+cancelBtn.addEventListener('click', () => {
+    modal.style.display = "none";
+});
+
+// close when clicking outside box
+modal.addEventListener('click', e => {
+    if (e.target === modal) modal.style.display = "none";
+});
+</script>
+

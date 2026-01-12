@@ -77,7 +77,7 @@
                 <textarea name="description" style="width:100%;padding:8px;margin-bottom:10px;" required></textarea>
                 <label>Status:</label>
                 <select name="status" id="addStatus" style="width:100%;padding:8px;margin-bottom:10px;">
-                    <option value="borrowed">Borrowed</option>
+                    <option value="damage">Damage</option>
                     <option value="returned">Returned</option>
                     <option value="lost">Lost</option>
                 </select>
@@ -128,7 +128,7 @@
 
                 <label>Status:</label>
                 <select name="status" id="editStatus" style="width:100%;padding:8px;margin-bottom:10px;">
-                    <option value="borrowed">Borrowed</option>
+                    <option value="damage">Damage</option>
                     <option value="returned">Returned</option>
                     <option value="lost">Lost</option>
                 </select>

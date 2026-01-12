@@ -112,6 +112,13 @@ class EventHighlightsController extends Controller
 
         $highlight->delete();
 
+        // If request is AJAX, return JSON
+        if (request()->ajax()) {
+            return response()->json(['message' => 'Highlight removed!']);
+        }
+
+        // Otherwise, redirect normally
         return redirect()->route('manage.events.highlights')->with('success', 'Highlight removed!');
     }
+
 }

@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($event->performers as $performer)
+                            @foreach ($event->selectedPerformers as $performer)
                                 <tr>
                                     <td>Performer {{ $performer->id }}</td>
                                     <td>{{ $performer->name }}</td>

@@ -8,22 +8,44 @@
             <thead>
                 <tr>
                     <th>Event ID</th>
+                    <th>Event Name</th>
                     <th>Event Details</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($events as $event)
+            @php $hasRecord = false; @endphp
+
+            @foreach ($events as $event)
+                @php  
+                    $myPerformer = $event->selectedPerformers->where('user_id', Auth::id())->first();
+                @endphp
+
+                @if ($myPerformer && $myPerformer->status != "available")
+                    @php $hasRecord = true; @endphp
+
                     <tr>
                         <td>{{ $event->id }}</td>
+                        <td>{{ ucfirst($event->title) }}</td>
                         <td>
                             <button class="btn-view" onclick="viewEvent({{ $event->id }})">VIEW EVENT</button>
                         </td>
-                        <td class="{{ strtolower($event->status) }}">
-                            {{ ucfirst($event->status) }}
+                        <td class="{{ strtolower($myPerformer->status) }}">
+                            {{ ucfirst($myPerformer->status) }}
                         </td>
                     </tr>
-                @endforeach
+                @endif
+            @endforeach
+
+            @if (!$hasRecord)
+                <tr>
+                    <td colspan="4" style="text-align:center;">
+                        <span>Record is Empty</span>
+                    </td>
+                </tr>
+            @endif
+
+
             </tbody>
         </table>
     </div>

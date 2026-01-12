@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventPerformer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -14,15 +15,14 @@ class EventController extends Controller
 {
     public function performerAvailability()
     {
-        $events = Event::with('selectedPerformers')->get(); 
-        $users = User::all(); 
+        $events = Event::with('selectedPerformers')->get();
 
-        return view('admin.events.performer-availability', compact('events', 'users'));
+        return view('admin.events.performer-availability', compact('events'));
     }
 
     public function store(Request $request)
     {
- 
+
         $request->validate([
             'title' => 'required|string',
             'client' => 'required',
@@ -62,7 +62,7 @@ class EventController extends Controller
             'is_show_event' => $request->is_show_event == 'on' ?? false,
             'mode' => $request->is_show_event == 'on' ? 'Show' : $request->mode ?? 'Others',
         ]);
- 
+
 
         return back()->with('success', 'Event added successfully.');
     }
@@ -79,13 +79,13 @@ class EventController extends Controller
         // Use Carbon to format start/end in proper format
         $start = \Carbon\Carbon::parse($event->date . ' ' . $event->time)->format('Ymd\THis');
         $end = \Carbon\Carbon::parse($event->date . ' ' . $event->end_time)
-                ->format('Ymd\THis');
-    
+            ->format('Ymd\THis');
+
         $uid = uniqid(); // unique event ID
         $description = $event->description ?: '';
         $location = $event->venue ?: '';
         $summary = $event->title ?: 'No Title';
-    
+
         $icsContent = <<<ICS
     BEGIN:VCALENDAR
     VERSION:2.0
@@ -101,14 +101,14 @@ class EventController extends Controller
     END:VEVENT
     END:VCALENDAR
     ICS;
-    
+
         // Send email with ICS attachment
         Mail::raw("You are invited to: $summary", function ($message) use ($icsContent, $userEmail) {
             $message->to($userEmail)
-                    ->subject('Event Invitation')
-                    ->attachData($icsContent, 'invite.ics', [
-                        'mime' => 'text/calendar',
-                    ]);
+                ->subject('Event Invitation')
+                ->attachData($icsContent, 'invite.ics', [
+                    'mime' => 'text/calendar',
+                ]);
         });
     }
     public function updatePerformerAvailability(Request $request, $eventId, $userId)
@@ -122,17 +122,18 @@ class EventController extends Controller
             $user = User::findOrFail($userId);
 
             // Update pivot (selected performers)
-            if ($event->selectedPerformers()->where('user_id', $userId)->exists()) {
-                $event->selectedPerformers()->updateExistingPivot($userId, [
-                    'status' => $request->status,
-                ]);
-            } else {
-                $event->selectedPerformers()->attach($userId, [
-                    'status' => $request->status,
-                ]);
-            }
-            if($request->status=="selected"){
-                $this->sendEventInvite($event,$user->email);
+
+            $eventPerformer = EventPerformer::firstOrNew([
+                'event_id' => $eventId,
+                'user_id' => $userId,
+            ]);
+
+            $eventPerformer->status = $request->status;
+            $eventPerformer->save();
+
+
+            if ($request->status == "selected") {
+                $this->sendEventInvite($event, $user->email);
 
             }
 
@@ -140,9 +141,9 @@ class EventController extends Controller
                 'success' => true,
                 'status' => $request->status,
             ]);
- 
+
         } catch (\Exception $e) {
-            Log::error('General Error: '.$e->getMessage());
+            Log::error('General Error: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -217,7 +218,7 @@ class EventController extends Controller
 
     public function availability()
     {
-        $events = Event::all();
+        $events = Event::with('selectedPerformers')->get();
 
         return view('events.availability', compact('events'));
     }
@@ -244,10 +245,20 @@ class EventController extends Controller
 
     public function updateStatus(Request $request, Event $event)
     {
-        $request->validate(['status' => 'required|in:available,unavailable,cancelled']);
-        $event->status = $request->status;
-        $event->save();
+        $eventPerformer = EventPerformer::where([
+            'event_id' => $event->id,
+            'user_id' => Auth::id(),
+        ])->firstOrNew();
 
-        return response()->json(['success' => true, 'status' => $event->status]);
+        $eventPerformer->status = $request->input('status');
+        $eventPerformer->event_id = $event->id;
+        $eventPerformer->user_id = Auth::id();
+        $eventPerformer->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $eventPerformer->status
+        ]);
     }
+
 }

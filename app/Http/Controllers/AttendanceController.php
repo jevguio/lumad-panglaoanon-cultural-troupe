@@ -11,20 +11,17 @@ class AttendanceController extends Controller
     public function index()
     {
         // Only admin or manager
-        $events = Event::with('performers')->get();
+        $events = Event::with('selectedPerformers')->get();
 
         if (! in_array(auth()->user()->type, ['admin', 'manager'])) {
             $events = $events->map(function ($event) {
-                $event->performers = $event->performers->where('id', auth()->id());
-
+                $event->selectedPerformers = $event->selectedPerformers->where('id', auth()->id());
                 return $event;
             });
 
             return view('performer.attendance.index', compact('events'));
         }
-
-        // Log the event data for admin/manager
-        Log::info('All Events Data:', $events->toArray());
+ 
 
         return view('admin.attendance.index', compact('events'));
     }

@@ -40,7 +40,7 @@ class DashboardController extends Controller
         // Stats
         $upcomingEvents = Event::whereDate('date', '>=', now())->count();
         $totalCostumes = Costume::count();
-        $activeMembers = User::where('status', 'active')->count();
+        $activeMembers = User::get()->count();
 
         // Real Data
         $costumes = Costume::latest()->take(3)->get();

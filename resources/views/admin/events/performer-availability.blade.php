@@ -8,7 +8,7 @@
         @foreach ($events as $event)
             <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
                 <div style="background:#f5a623; color:white; padding:10px; font-weight:bold;">
-                    Event ID: {{ $event->title }}
+                    Event ID: {{ $event->id }} - {{ $event->title }}
                 </div>
                 <table style="width:100%; border-collapse:collapse;">
                     <thead>
@@ -20,13 +20,7 @@
                     </thead>
                     <tbody>
 
-                        @foreach ($users as $user)
-                            @php
-                                // Find this user inside selectedPerformers
-                                $performer = $event->performers->where('id', '=', $user->id)->first() ?? null;
-
-                            @endphp
-
+                        @foreach ($event->performers as $performer) 
                             @if ($performer)
                                 <tr>
                                     <td style="padding:8px; border:1px solid #ddd;">{{ $performer->id }}</td>
@@ -51,7 +45,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @else
+                            {{-- @else
                                 <tr>
                                     <td style="padding:8px; border:1px solid #ddd;">{{ $user->id }}</td>
                                     <td style="padding:8px; border:1px solid #ddd;">{{ $user->name }}</td>
@@ -74,7 +68,7 @@
                                             UNDO
                                         </button>
                                     </td>
-                                </tr>
+                                </tr> --}}
                             @endif
                         @endforeach
 
