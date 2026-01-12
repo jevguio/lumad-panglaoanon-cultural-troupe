@@ -10,8 +10,10 @@ class Costume extends Model
 
     protected $fillable = [
         'user_id',
+        'event_id',
         'name',
         'status',
+        'description',
         'date_returned',
         'date_lost',
         'img',
@@ -22,6 +24,10 @@ class Costume extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
     }
     
 }

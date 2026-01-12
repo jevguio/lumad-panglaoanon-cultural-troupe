@@ -108,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/view-costume', [CostumeController::class, 'view'])->name('view-costume');
     Route::get('/manage-costume', [CostumeController::class, 'index'])->name('manage-costume');
-    Route::get('/status-costume', [CostumeController::class, 'index'])->name('status-costume');
+    // Route::get('/status-costume', [CostumeController::class, 'index'])->name('status-costume');
     Route::get('/costume/{costume}/edit', [CostumeController::class, 'edit'])->name('edit-costume');
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance/{event}/{user}', [AttendanceController::class, 'update'])->name('attendance.update');

@@ -87,12 +87,12 @@ background-color: {{ $bgColor }} !important;">
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
                     </a>
                 </li>
-                <li class="{{ request()->is('status-costume') ? 'active' : '' }}"
+                {{-- <li class="{{ request()->is('status-costume') ? 'active' : '' }}"
                     data-link="{{ route('status-costume') }}">
                     <a href="{{ route('status-costume') }}">
                         <img src="{{ asset('icons/Kimono.png') }}" style="width:30px;  border: none;">
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="{{ request()->is('view/events/history') ? 'active' : '' }}"
                     data-link="{{ route('my.schedule') }}">

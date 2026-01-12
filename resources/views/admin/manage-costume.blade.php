@@ -28,17 +28,24 @@
                             <td style="padding:8px; border:1px solid #ddd; text-align:center;">
                                 <button class="view-costume-btn" data-id="{{ $costume->id }}"
                                     style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
-                                    VIEW COSTUME
+                                    VIEW 
+                                </button> 
+                                <button class="edit-costume-btn" data-id="{{ $costume->id }}"
+                                    style="background:#105bcc; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                                    EDIT 
+                                </button>
+                                <button class="delete-costume-btn" data-id="{{ $costume->id }}"
+                                    style="background:#ac0808; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                                    DELETE 
                                 </button>
                             </td>
                             <td style="padding:8px; border:1px solid #ddd; text-align:center;">
-                                <span
-                                    style="
-                                    {{ strtolower($costume->status) === 'returned'
-                                        ? 'color:green;'
-                                        : (strtolower($costume->status) === 'lost'
-                                            ? 'color:red;'
-                                            : 'color:orange;') }}">
+                                <span style="
+                                                {{ strtolower($costume->status) === 'returned'
+                        ? 'color:green;'
+                        : (strtolower($costume->status) === 'lost'
+                            ? 'color:red;'
+                            : 'color:orange;') }}">
                                     {{ ucfirst($costume->status) }}
                                 </span>
                             </td>
@@ -52,42 +59,7 @@
             </table>
         </div>
     @endforeach
-
-    <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
-        <div style="background:#31708f; color:white; padding:10px; font-weight:bold;">
-            AVAILABLE COSTUME
-        </div>
-
-        <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="background:#31708f;color:white; text-align:left;">
-                    <th style="padding:8px; border:1px solid #ddd;">Costume ID</th>
-                    <th style="padding:8px; border:1px solid #ddd;">Costume Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($costumes as $costume)
-                    <tr style="background-color:#f2f2f2">
-                        <td style="padding:8px; border:1px solid #ddd;">Costume {{ $costume->id }}</td>
-                        <td style="padding:8px; border:1px solid #ddd; text-align:center;">
-                            <button class="view-costume-btn" data-id="{{ $costume->id }}"
-                                style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
-                                VIEW COSTUME
-                            </button>
-                            <button class="edit-costume-btn" data-id="{{ $costume->id }}"
-                                style="background:#f5a623; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
-                                EDIT COSTUME
-                            </button>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="text-align:center; padding:10px;">No costumes found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+ 
     <div id="addCostumeModal" class="modal">
         <div class="modal-card">
             <span class="close" id="closeAddCostumeModal">&times;</span>
@@ -95,8 +67,23 @@
 
             <form id="addCostumeForm" enctype="multipart/form-data">
                 @csrf
-                <label>Costume Image:</label>
+                <label>Event ID:</label>
+                <input type="number" name="event_id" id="addEventID">
+
+                <label>Costume Name:</label>
                 <input type="text" name="name" style="width:100%;padding:8px;margin-bottom:10px;" required>
+
+                <label>Costume Description:</label>
+                <textarea name="description" style="width:100%;padding:8px;margin-bottom:10px;" required></textarea>
+                <label>Status:</label>
+                <select name="status" id="addStatus" style="width:100%;padding:8px;margin-bottom:10px;">
+                    <option value="borrowed">Borrowed</option>
+                    <option value="returned">Returned</option>
+                    <option value="lost">Lost</option>
+                </select>
+
+                <label>Date Received:</label>
+                <input type="datetime-local" name="date_received">
 
                 <label>Costume Image:</label>
                 <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;"
@@ -127,9 +114,18 @@
 
                 <input type="hidden" name="id" id="editCostumeID">
 
+                <label>Event ID:</label>
+                <input type="number" name="editEvent_id" id="editEventID">
                 <label>Update Name:</label>
                 <input type="text" name="name" id="editCostumeName" style="width:100%;padding:8px;margin-bottom:10px;"
                     required>
+                    
+                <label>Costume Description:</label>
+                <textarea id="editDescription" name="description" style="width:100%;padding:8px;margin-bottom:10px;" required></textarea>
+
+                <label>Date Received:</label>
+                <input type="datetime-local" name="date_received" id="edit_date_received">
+
                 <label>Status:</label>
                 <select name="status" id="editStatus" style="width:100%;padding:8px;margin-bottom:10px;">
                     <option value="borrowed">Borrowed</option>
@@ -139,7 +135,7 @@
 
                 <label>Update Image:</label>
                 <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;margin-bottom:10px;">
-
+                <img src="" id="editImage" />
                 <button type="submit"
                     style="background:#f5a623;color:white;padding:8px 12px;border:none;border-radius:6px;width:100%;cursor:pointer;">
                     UPDATE COSTUME
@@ -159,7 +155,7 @@
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
 
-            <div id="costumeModalPreviewIMG"   > </div>
+            <div id="costumeModalPreviewIMG"> </div>
             <div id="lostReportSection" style="margin-top:10px; display:none;">
                 <p><b>Lost Report Images:</b></p>
                 <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -167,6 +163,7 @@
                 <p style="margin-top:8px;"><b>Report Detail:</b></p>
                 <p id="costumeReportDetail"></p>
             </div>
+ 
         </div>
     </div>
 
@@ -238,12 +235,14 @@
                     progress += 5;
                     loadingFill.style.width = progress + "%";
                 }
-            }, 200);
-
+            }, 200); 
             fetch('/admin/costumes', {
-                    method: 'POST',
-                    body: formData
-                })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
                 .then(res => res.json())
                 .then(() => {
                     // Finish loading animation
@@ -280,6 +279,10 @@
                     .then(r => r.json())
                     .then(data => {
                         document.getElementById('editCostumeID').value = data.id;
+                        document.getElementById('editEventID').value = data.event_id;
+                        document.getElementById('edit_date_received').value = data.date_received;
+                        document.getElementById('editDescription').value = data.description;
+                        document.getElementById('editImage').src = '/' + data.img;
                         document.getElementById('editCostumeName').value = data.name;
                         document.getElementById('editStatus').value = data.status;
                         editModal.style.display = 'block';
@@ -291,11 +294,12 @@
             e.preventDefault();
             const id = document.getElementById('editCostumeID').value;
             const formData = new FormData(e.target);
+            formData.append('_method', 'PUT');
 
             fetch(`/admin/costumes/${id}`, {
-                    method: 'POST',
-                    body: formData
-                })
+                method: 'POST',
+                body: formData
+            })
                 .then(() => location.reload());
         });
 

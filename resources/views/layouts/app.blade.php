@@ -127,8 +127,7 @@ error_reporting(E_ALL & ~E_DEPRECATED);
             })
             .then(res => res.json())
             .then(data => {
-                allData = data.allData;
-                console.log("Loaded data:", allData);
+                allData = data.allData; 
             });
 
         const input = document.getElementById('searchInput');

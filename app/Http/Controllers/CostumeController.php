@@ -14,9 +14,10 @@ class CostumeController extends Controller
         $performers = User::with('costumes')->get();
         $costumes = Costume::whereDoesntHave('user')->get();
         $user = Auth::user();
-        // if (! in_array($user->type, ['admin', 'manager'])) {
-        //     return view('performer.manage-costume', compact('performers', 'costumes'));
-        // }
+        if (in_array($user->type, ['admin', 'manager'])) {
+            return view('performer.manage-costume', compact('performers', 'costumes'));
+        }
+
 
         return view('admin.manage-costume', compact('performers', 'costumes'));
     }
@@ -45,7 +46,10 @@ class CostumeController extends Controller
 
         $costume = Costume::create([
             'name' => $req->name,
-            'status' => 'returned',
+            'description' => $req->description,
+            'date_complied' => $req->date_received,
+            'event_id' => $req->event_id,
+            'status' =>  $req->status,
             'img' => $imagePath,
         ]);
 
@@ -54,10 +58,13 @@ class CostumeController extends Controller
 
     public function show($id)
     {
-        $costume = Costume::findOrFail($id);
+        $costume = Costume::with('event')->findOrFail($id);
         return response()->json([
             'id' => $costume->id,
             'status' => $costume->status,
+            'description' => $costume->description,
+            'name' => $costume->name,
+            'event_id' => $costume->event?->id,
             'img' => $costume->img,
             'date_returned' => $costume->date_returned,
             'date_lost' => $costume->date_lost,
@@ -72,6 +79,10 @@ class CostumeController extends Controller
         $costume = Costume::findOrFail($id);
         $costume->status = $req->status;
         $costume->name = $req->name;
+        $costume->description = $req->description;
+        $costume->event_id = $req->event_id;
+        $costume->status = $req->status;
+        $costume->date_complied = $req->date_received;
 
         if ($req->hasFile('image')) {
             $imagePath = $req->file('image')->store('costumes', 'public');
