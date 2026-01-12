@@ -16,7 +16,13 @@ background-color: {{ $bgColor }} !important;">
         </div>
         <div style="margin-top: 45px;"></div>
         <div class="head targ" id="headProf" style="display: flex;">
-            <img class="avatar" src="{{ asset('icons/avatar.png') }}"> 
+            <img 
+    id="profileImage" 
+    class="avatar" 
+    src="{{ auth()->user()->profile_img ? asset('storage/' . auth()->user()->profile_img) : asset('icons/avatar.png') }}" 
+    style="cursor:pointer;"
+    onclick="selectProfileImage()"
+>
         </div>
         <ul id="sidebarMenu">
             <li class="{{ request()->is('event-schedule') ? 'active' : '' }}" data-link="{{ route('events.index') }}">
@@ -113,3 +119,26 @@ background-color: {{ $bgColor }} !important;">
         </div> --}}
     </nav>
 </div>
+
+<form id="uploadForm" action="{{ route('profile.upload') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+    @csrf
+    <input type="file" id="profileFile" name="profile_img" accept="image/*">
+</form>
+ 
+    <script>
+        
+function selectProfileImage() {
+    const fileInput = document.getElementById('profileFile');
+
+    fileInput.click(); // trigger file selection
+
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            const confirmUpload = confirm('Do you want to upload this image as your profile picture?');
+            if (confirmUpload) {
+                document.getElementById('uploadForm').submit();
+            }
+        }
+    };
+}
+    </script> 

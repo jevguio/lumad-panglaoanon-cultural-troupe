@@ -122,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/manage/events/hignlights', [EventHighlightsController::class, 'index'])->name('manage.events.highlights');
+Route::post('/profile/upload', [UserController::class, 'upload'])->name('profile.upload');
 
     Route::get('/view/events/hignlights', [EventHighlightsController::class, 'highlights'])->name('view.events.highlights');
     Route::get('/view/events/history', [EventHighlightsController::class, 'history'])->name('view.events.history');

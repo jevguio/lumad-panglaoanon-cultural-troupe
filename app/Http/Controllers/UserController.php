@@ -13,6 +13,23 @@ class UserController extends Controller
         $users = User::where('type', '!=', 'admin')->get();
         return view('admin.users.index', compact('users'));
     }
+public function upload(Request $request)
+{
+    $request->validate([
+        'profile_img' => 'required|image|max:2048', // max 2MB
+    ]);
+
+    $user = auth()->user();
+
+    if ($request->hasFile('profile_img')) {
+        $path = $request->file('profile_img')->store('profile_images', 'public');
+
+        $user->profile_img = $path;
+        $user->save();
+    }
+
+    return back()->with('success', 'Profile image updated!');
+}
 
     public function store(Request $request)
     {

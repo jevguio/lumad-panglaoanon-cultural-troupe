@@ -21,7 +21,13 @@ background-color: {{ $bgColor }} !important;">
         </div>
         <div style="margin-top: 45px;"></div>
         <div class="head targ" id="headProf" style="display: flex;">
-            <img class="avatar" src="{{ asset('icons/avatar.png') }}">
+            <img 
+    id="profileImage" 
+    class="avatar" 
+    src="{{ auth()->user()->profile_img ? asset('storage/' . auth()->user()->profile_img) : asset('icons/avatar.png') }}" 
+    style="cursor:pointer;"
+    onclick="selectProfileImage()"
+>
             <div>
                 <div class="name">{{ Auth::user()->name }}</div>
                 <div class="" style="font-size:12px;opacity:.9">
@@ -166,6 +172,11 @@ background-color: {{ $bgColor }} !important;">
 
 
 </div>
+<form id="uploadForm" action="{{ route('profile.upload') }}" method="POST" enctype="multipart/form-data" style="display:none;">
+    @csrf
+    <input type="file" id="profileFile" name="profile_img" accept="image/*">
+</form>
+
 <style>
 .logout-modal {
     position: fixed;
@@ -234,6 +245,21 @@ background-color: {{ $bgColor }} !important;">
 </style>
 
 <script>
+    
+function selectProfileImage() {
+    const fileInput = document.getElementById('profileFile');
+
+    fileInput.click(); // trigger file selection
+
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            const confirmUpload = confirm('Do you want to upload this image as your profile picture?');
+            if (confirmUpload) {
+                document.getElementById('uploadForm').submit();
+            }
+        }
+    };
+}
 const modal = document.getElementById('logoutModal');
 const openBtn = document.getElementById('logoutBtn');
 const cancelBtn = document.getElementById('cancelLogout');

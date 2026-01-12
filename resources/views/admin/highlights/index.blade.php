@@ -239,40 +239,44 @@ document.addEventListener('DOMContentLoaded', function() {
             e.returnValue = 'Files are still uploading. Are you sure you want to leave?';
         }
     });
-    
     document.querySelectorAll('.deleteHighlightBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parent = btn.closest('.event-card');
-            const highlightId = parent.dataset.highlightId;
-            if (!highlightId) {
-                alert('No highlight exists for this event.');
-                return;
+    btn.addEventListener('click', () => {
+        const parent = btn.closest('.event-card');
+        const highlightId = parent.dataset.highlightId;
+        if (!highlightId) {
+            alert('No highlight exists for this event.');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to delete this highlight?')) return;
+
+        // Use absolute URL via Laravel helper
+        const deleteUrl = '{{ url("event-highlights") }}/' + highlightId;
+
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                 'X-Requested-With': 'XMLHttpRequest'  
             }
-
-            if (!confirm('Are you sure you want to delete this highlight?')) return;
-
-            fetch(`/event-highlights/${highlightId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(res => {
-                if (res.ok) {
-                    alert('Highlight deleted successfully!');
-                    parent.remove(); // remove card from DOM
-                } else {
-                    alert('Failed to delete highlight.');
-                    console.error(res);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('An error occurred while deleting.');
-            });
+        })
+        .then(res => {
+            if (res.ok) {
+                alert('Highlight deleted successfully!');
+                parent.remove(); // remove card from DOM
+            } else {
+                console.error(res);
+                alert('Failed to delete highlight.');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('An error occurred while deleting.');
         });
     });
+});
+
 
 });
 </script>

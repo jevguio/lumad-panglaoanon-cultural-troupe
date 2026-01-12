@@ -12,10 +12,20 @@ class EventHighlightsController extends Controller
 {
     public function index()
     {
-        $showEvents = Event::where('is_show_event', true)->with('highlights.files')->get();
-        $otherEvents = Event::where('is_show_event', false)->with('highlights.files')->get();
+        // Only show events that have at least one highlight
+        $showEvents = Event::where('is_show_event', true)
+            ->whereHas('highlights') // <- only events with highlights
+            ->with('highlights.files')
+            ->get();
+
+        $otherEvents = Event::where('is_show_event', false)
+            ->whereHas('highlights') // <- only events with highlights
+            ->with('highlights.files')
+            ->get();
+
         return view('admin.highlights.index', compact('showEvents', 'otherEvents'));
     }
+
     public function history()
     {
         $showEvents = Event::where('is_show_event', true)->with('highlights.files')->get();
