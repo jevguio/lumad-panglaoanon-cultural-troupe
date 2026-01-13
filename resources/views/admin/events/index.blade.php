@@ -193,11 +193,11 @@
         
 document.addEventListener('DOMContentLoaded', function() {
 
-        function openModal() {
+    window.openModal = function () {
             document.getElementById("eventModal4").style.display = "flex";
         }
 
-        function closeModal2() {
+    window.closeModal2 = function () {
             document.getElementById("eventModal4").style.display = "none";
         }
 
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById("eventModal3");
 
         // =================== UPDATE ===================
-        function openUpdateModal(id) {
+    window.openUpdateModal = function (id) {
             fetch(`/events/${id}`)
                 .then(r => r.json())
                 .then(ev => {
@@ -255,14 +255,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
 
-        function closeUpdateModal() {
+    window.closeUpdateModal = function () { 
             document.getElementById("updateModal").style.display = "none";
         }
 
         // =================== DELETE ===================
         let deleteId = null;
 
-        function openDeleteModal(id) {
+    window.openDeleteModal = function (id) {
             deleteId = id;
             document.getElementById("deleteModal").style.display = "flex";
         }
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
 
-        function closeDeleteModal() {
+    window.closeDeleteModal = function () { 
             document.getElementById("deleteModal").style.display = "none";
         }
         document.querySelectorAll('.set-status').forEach(btn => {
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
-        function viewAttendance(id) {
+    window.viewEvent = function (id) {
             alert('Open attendance for ID: ' + id);
         }
 
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => t.remove(), 1600);
         }
 
-        function viewEvent(id) {
+    window.closeModal = function () { 
             fetch(`/events/${id}`)
                 .then(r => r.json())
                 .then(ev => {
