@@ -162,7 +162,7 @@ background-color: {{ $bgColor }} !important;">
             <div class="logout-actions">
                 <button id="cancelLogout">Cancel</button>
 
-                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                <form id="logout-form" action="{{ route('logout') }}" method="get">
                     @csrf
                     <button type="submit" class="danger">Logout</button>
                 </form>
