@@ -28,17 +28,17 @@
                                             method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" name="status" value="present"
-                                                class="status-btn {{ $performer->pivot->attendance === 'present' ? 'active present' : '' }}">
+                                                class="status-btn {{ $performer->attendance === 'present' ? 'active present' : '' }}">
                                                 PRESENT
                                             </button>
 
                                             <button type="submit" name="status" value="absent"
-                                                class="status-btn {{ $performer->pivot->attendance === 'absent' ? 'active absent' : '' }}">
+                                                class="status-btn {{ $performer->attendance === 'absent' ? 'active absent' : '' }}">
                                                 ABSENT
                                             </button>
 
                                             <button type="submit" name="status" value="late"
-                                                class="status-btn {{ $performer->pivot->attendance === 'late' ? 'active late' : '' }}">
+                                                class="status-btn {{ $performer->attendance === 'late' ? 'active late' : '' }}">
                                                 LATE
                                             </button>
 
