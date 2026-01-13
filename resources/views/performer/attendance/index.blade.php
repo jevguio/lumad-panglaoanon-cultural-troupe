@@ -22,7 +22,7 @@
                                         <td>Performer {{ $performer->id }}</td>
                                         <td>{{ $performer->name }}</td>
                                         <td>
-                                            {{ $performer->pivot->attendance }}
+                                            {{ $performer->attendance }}
                                         </td>
                                     </tr>
                                 @endif
