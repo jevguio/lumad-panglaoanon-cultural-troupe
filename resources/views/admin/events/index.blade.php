@@ -190,6 +190,9 @@
 
 @push('scripts')
     <script>
+        
+document.addEventListener('DOMContentLoaded', function() {
+
         function openModal() {
             document.getElementById("eventModal4").style.display = "flex";
         }
@@ -365,5 +368,6 @@
         function closeModal() {
             document.getElementById('eventModal3').style.display = 'none';
         }
+    })
     </script>
 @endpush
