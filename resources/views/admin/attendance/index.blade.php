@@ -21,8 +21,8 @@
                         <tbody>
                             @foreach ($event->selectedPerformers as $performer)
                                 <tr>
-                                    <td>Performer {{ $performer->user_id }}</td>
-                                    <td>{{ $performer->name }}</td>
+                                    <td>{{ $performer->user_id }}</td>
+                                    <td>{{ $performer->performer->name }}</td>
                                     <td>
                                         <form action="{{ route('attendance.update', [$event->id, $performer->user_id]) }}"
                                             method="POST" class="d-inline">
