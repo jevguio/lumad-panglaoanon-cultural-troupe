@@ -176,14 +176,17 @@
             left: 0;
             top: 0;
             width: 100%;
-            height: 100%;
-            overflow: auto;
+            height: 100vh;
+            overflow: none;
             background-color: rgba(0, 0, 0, 0.4);
         }
 
         .modal-card {
             background-color: #fff;
-            margin: 8% auto;
+            position: fixed; 
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
             padding: 20px;
             border: 1px solid #888;
             width: 90%;
