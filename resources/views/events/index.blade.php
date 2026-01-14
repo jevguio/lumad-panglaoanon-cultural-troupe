@@ -62,16 +62,18 @@
 
 @push('scripts')
     <script>
-        const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        const modal = document.getElementById("eventModal3");
-        document.querySelectorAll('.set-status').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const status = btn.dataset.status;
-                const card = btn.closest('.card');
-                const id = card.dataset.id;
+        document.addEventListener("DOMContentLoaded", function () {
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                fetch(`/events/${id}/status`, {
+            const modal = document.getElementById("eventModal3");
+            document.querySelectorAll('.set-status').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const status = btn.dataset.status;
+                    const card = btn.closest('.card');
+                    const id = card.dataset.id;
+
+                    fetch(`/events/${id}/status`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -82,67 +84,68 @@
                             status
                         })
                     })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) showToast('Status: ' + data.status);
-                    })
-                    .catch(err => showToast('Error'));
-            });
-        });
-
-
-        function viewAttendance(id) {
-            alert('Open attendance for ID: ' + id);
-        }
-
-        function showToast(text) {
-            const t = document.createElement('div');
-            t.textContent = text;
-            Object.assign(t.style, {
-                position: 'fixed',
-                right: '20px',
-                bottom: '20px',
-                background: '#111',
-                color: '#fff',
-                padding: '10px 14px',
-                borderRadius: '6px'
-            });
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 1600);
-        }
-
-        function viewEvent(id) {
-            fetch(`/events/${id}`)
-                .then(r => r.json())
-                .then(ev => {
-                    let html = `<h2>${ev.title}</h2>`;
-                    html += `<p><strong>Client:</strong> ${ev.client}</p>`;
-                    html += `<p><strong>Venue:</strong> ${ev.venue}</p>`;
-                    html += `<p><strong>Type:</strong> ${ev.type}</p>`;
-                    html += `<p><strong>Date:</strong> ${ev.date}</p>`;
-                    html += `<p><strong>Time:</strong> ${ev.time}</p>`;
-                    html += `<p><strong>Status:</strong> ${ev.status}</p>`;
-                    html += `<p><strong>Required Performers:</strong> ${ev.required_performers}</p>`;
-                    html += `<p><strong>Description:</strong> ${ev.description}</p>`;
-
-                    if (ev.selected_performers && ev.selected_performers.length) {
-                        html += `<p><strong>Selected Performers:</strong></p>`;
-                        html += ev.selected_performers.map(p =>
-                            `<span style='background:#3ab76a;color:#fff;padding:4px 8px;border-radius:6px;margin-right:6px'>${p}</span>`
-                        ).join('');
-                    }
-
-                    document.getElementById('modalContent').innerHTML = html;
-                    document.getElementById('eventModal3').style.display = 'flex';
-
-                    window.addEventListener("click", e => {
-                        if (e.target === modal) closeModal();
-                    });
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) showToast('Status: ' + data.status);
+                        })
+                        .catch(err => showToast('Error'));
                 });
-        }
+            });
 
-        function closeModal() {
-            document.getElementById('eventModal3').style.display = 'none';
-        }
+
+            function viewAttendance(id) {
+                alert('Open attendance for ID: ' + id);
+            }
+
+            function showToast(text) {
+                const t = document.createElement('div');
+                t.textContent = text;
+                Object.assign(t.style, {
+                    position: 'fixed',
+                    right: '20px',
+                    bottom: '20px',
+                    background: '#111',
+                    color: '#fff',
+                    padding: '10px 14px',
+                    borderRadius: '6px'
+                });
+                document.body.appendChild(t);
+                setTimeout(() => t.remove(), 1600);
+            }
+
+            window.viewEvent = function (id) {
+                fetch(`/events/${id}`)
+                    .then(r => r.json())
+                    .then(ev => {
+                        let html = `<h2>${ev.title}</h2>`;
+                        html += `<p><strong>Client:</strong> ${ev.client}</p>`;
+                        html += `<p><strong>Venue:</strong> ${ev.venue}</p>`;
+                        html += `<p><strong>Type:</strong> ${ev.type}</p>`;
+                        html += `<p><strong>Date:</strong> ${ev.date}</p>`;
+                        html += `<p><strong>Time:</strong> ${ev.time}</p>`;
+                        html += `<p><strong>Status:</strong> ${ev.status}</p>`;
+                        html += `<p><strong>Required Performers:</strong> ${ev.required_performers}</p>`;
+                        html += `<p><strong>Description:</strong> ${ev.description}</p>`;
+
+                        if (ev.selected_performers && ev.selected_performers.length) {
+                            html += `<p><strong>Selected Performers:</strong></p>`;
+                            html += ev.selected_performers.map(p =>
+                                `<span style='background:#3ab76a;color:#fff;padding:4px 8px;border-radius:6px;margin-right:6px'>${p}</span>`
+                            ).join('');
+                        }
+
+                        document.getElementById('modalContent').innerHTML = html;
+                        document.getElementById('eventModal3').style.display = 'flex';
+
+                        window.addEventListener("click", e => {
+                            if (e.target === modal) closeModal();
+                        });
+                    });
+            }
+
+            window.closeModal = function () {
+                document.getElementById('eventModal3').style.display = 'none';
+            }
+        });
     </script>
 @endpush
