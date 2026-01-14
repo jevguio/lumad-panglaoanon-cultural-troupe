@@ -34,9 +34,19 @@
                                                 onclick="viewEvent({{ $event->id }})">VIEW
                                                 EVENT</button>
                                         </td>
-                                        <td>
-                                            {{$performer->attendance}}
+                                       @php
+                                            $color = match(strtolower($performer->attendance)) {
+                                                'present' => 'green',
+                                                'absent'  => 'red',
+                                                'late'    => 'orange',
+                                                default   => 'black',
+                                            };
+                                        @endphp
+
+                                        <td style="color: {{ $color }}">
+                                            {{ ucfirst($performer->attendance) }}
                                         </td>
+
                                     </tr>
                                 @endif
                                 
