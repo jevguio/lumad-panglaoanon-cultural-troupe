@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
-@section('content')
+@section('content')<style>
+    .attendance.present { color: green; }
+    .attendance.absent { color: red; }
+    .attendance.late { color: orange; }
+</style>
+
     <div class="container"  style="padding:20px">
         <h2 class="mb-4 text-danger">PERFORMER ATTENDANCE</h2>
 
@@ -16,13 +21,13 @@
                     </thead>
                     <tbody>
                         @foreach ($events as $event)
-                            @foreach ($event->selectedPerformers as $performer)
+                            @foreach ($event->performers as $performer)
                                 @if ($performer->id == Auth::user()->id)
                                     <tr style="background-color: #F2BB55;">
                                         <td>Performer {{ $performer->id }}</td>
                                         <td>{{ $performer->name }}</td>
-                                        <td>
-                                            {{ $performer->attendance }}
+                                       <td class="attendance {{ $performer->pivot->attendance }}">
+                                            {{ ucfirst($performer->pivot->attendance) }}
                                         </td>
                                     </tr>
                                 @endif
