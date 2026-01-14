@@ -35,7 +35,7 @@
                                                 EVENT</button>
                                         </td>
                                         <td>
-                                            {{$performer->status}}
+                                            {{$performer->attendance}}
                                         </td>
                                     </tr>
                                 @endif
