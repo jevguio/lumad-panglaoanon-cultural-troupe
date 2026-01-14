@@ -27,19 +27,19 @@
                                     <td style="padding:8px; border:1px solid #ddd;">{{ $performer->name }}</td>
                                     <td style="padding:8px; border:1px solid #ddd;">
                                         <button class="btn-availability" data-event="{{ $event->id }}"
-                                            data-user="{{ $performer->id }}" data-status="selected"
+                                            data-user="{{ $performer->user_id }}" data-status="selected"
                                             style="{{ $performer->status == 'selected' ? 'background-color:#4CAF50; color:white;' : ' color:#000000; ' }} padding:4px 10px; border:none; border-radius:4px;">
                                             SELECT
                                         </button>
 
                                         <button class="btn-availability" data-event="{{ $event->id }}"
-                                            data-user="{{ $performer->id }}" data-status="unselected"
+                                            data-user="{{ $performer->user_id }}" data-status="unselected"
                                             style="{{ $performer->status == 'unselected' ? 'background-color:#e74c3c; color:white;' : ' color:#000000; ' }} padding:4px 10px; border:none; border-radius:4px;">
                                             UNSELECT
                                         </button>
 
                                         <button class="btn-availability" data-event="{{ $event->id }}"
-                                            data-user="{{ $performer->id }}" data-status="undo"
+                                            data-user="{{ $performer->user_id }}" data-status="undo"
                                             style="{{ $performer->status == 'undo' ? 'background-color:#f39c12; color:white;' : ' color:#000000; ' }} padding:4px 10px; border:none; border-radius:4px;">
                                             UNDO
                                         </button>
