@@ -92,9 +92,8 @@
                 });
             });
 
-
-            function viewAttendance(id) {
-                alert('Open attendance for ID: ' + id);
+            window.viewAttendance = function (id) {
+                window.location.href = "{{ route('attendance.index') }}?id=" + id;
             }
 
             function showToast(text) {
