@@ -28,9 +28,8 @@ class EventHighlightsController extends Controller
 
     public function history()
     {
-        $showEvents = Event::where('is_show_event', true)->with('highlights.files')->get();
-        $otherEvents = Event::where('is_show_event', false)->with('highlights.files')->get();
-        return view('performer.history.index', compact('showEvents', 'otherEvents'));
+        $showEvents = Event::with('selectedPerformers')->get();
+        return view('performer.history.index', compact('showEvents'));
     }
 
     public function highlights()

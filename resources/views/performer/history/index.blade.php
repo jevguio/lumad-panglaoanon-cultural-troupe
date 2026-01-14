@@ -24,17 +24,23 @@
                     </thead>
                     <tbody>
                         @foreach ($showEvents as $event)
-                            <tr style="background-color: #D9D9D9; padding:10px;">
-                                <td>Performer {{ $event->id }}</td>
-                                <td>
-                                    <button class="btn large btn orange set-status"
-                                        onclick="viewEvent({{ $event->id }})">VIEW
-                                        EVENT</button>
-                                </td>
-                                <td>
-                                    {{ $event->status}}
-                                </td>
-                            </tr>
+                            @foreach ($event->selectedPerformers as $performer) 
+                                @if ( $performer->user_id==Auth::user()->id)
+                                    
+                                    <tr style="background-color: #D9D9D9; padding:10px;">
+                                        <td>Performer {{ $event->id }}</td>
+                                        <td>
+                                            <button class="btn large btn orange set-status"
+                                                onclick="viewEvent({{ $event->id }})">VIEW
+                                                EVENT</button>
+                                        </td>
+                                        <td>
+                                            {{ $event}}
+                                        </td>
+                                    </tr>
+                                @endif
+                                
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>
