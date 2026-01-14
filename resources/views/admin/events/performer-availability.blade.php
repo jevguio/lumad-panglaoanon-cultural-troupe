@@ -23,8 +23,8 @@
                         @foreach ($event->selectedPerformers as $performer) 
                             @if ($performer)
                                 <tr>
-                                    <td style="padding:8px; border:1px solid #ddd;">{{ $performer->id }}</td>
-                                    <td style="padding:8px; border:1px solid #ddd;">{{ $performer->name }}</td>
+                                    <td style="padding:8px; border:1px solid #ddd;">{{ $performer->performer->id }}</td>
+                                    <td style="padding:8px; border:1px solid #ddd;">{{ $performer->performer->name }}</td>
                                     <td style="padding:8px; border:1px solid #ddd;">
                                         <button class="btn-availability" data-event="{{ $event->id }}"
                                             data-user="{{ $performer->user_id }}" data-status="selected"
