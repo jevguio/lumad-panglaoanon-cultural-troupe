@@ -211,6 +211,7 @@
 
 @push('scripts')
     <script>
+document.addEventListener('DOMContentLoaded', function() {
         // ---------------- ADD COSTUME ----------------
         const addModal = document.getElementById('addCostumeModal');
         document.getElementById('openAddCostumeModal').onclick = () => addModal.style.display = 'block';
@@ -377,5 +378,6 @@
         window.addEventListener('click', (e) => {
             if (e.target === modal) modal.style.display = 'none';
         });
+    });
     </script>
 @endpush
