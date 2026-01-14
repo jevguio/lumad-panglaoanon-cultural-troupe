@@ -2,7 +2,7 @@
 
 @section('content')
     <h2 style="color:#b22222; margin-bottom:20px;">COSTUME STATUS</h2>
- 
+
     @foreach ($performers as $performer)
         <div style="margin-bottom:25px; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
             <div style="background:#31708f; color:white; padding:10px; font-weight:bold;">
@@ -28,13 +28,12 @@
                                 </button>
                             </td>
                             <td style="padding:8px; border:1px solid #ddd; text-align:center;">
-                                <span
-                                    style="
-                                    {{ strtolower($costume->status) === 'returned'
-                                        ? 'color:green;'
-                                        : (strtolower($costume->status) === 'lost'
-                                            ? 'color:red;'
-                                            : 'color:orange;') }}">
+                                <span style="
+                                                {{ strtolower($costume->status) === 'returned'
+                        ? 'color:green;'
+                        : (strtolower($costume->status) === 'lost'
+                            ? 'color:red;'
+                            : 'color:orange;') }}">
                                     {{ ucfirst($costume->status) }}
                                 </span>
                             </td>
@@ -48,7 +47,7 @@
             </table>
         </div>
     @endforeach
- 
+
     {{-- View Costume Modal --}}
     <div id="costumeModal" class="modal">
         <div class="modal-card">
@@ -60,7 +59,7 @@
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
             <p><b>Date Complied:</b> <span id="costumeModalComplied"></span></p>
 
-            <div id="costumeModalPreviewIMG"   > </div>
+            <div id="costumeModalPreviewIMG"> </div>
             <div id="lostReportSection" style="margin-top:10px; display:none;">
                 <p><b>Lost Report Images:</b></p>
                 <div id="costumeReportImages" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -115,123 +114,123 @@
 
 @push('scripts')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        // ---------------- ADD COSTUME ----------------
-        const addModal = document.getElementById('addCostumeModal');
-        document.getElementById('openAddCostumeModal').onclick = () => addModal.style.display = 'block';
-        document.getElementById('closeAddCostumeModal').onclick = () => addModal.style.display = 'none';
+        document.addEventListener("DOMContentLoaded", function () {
+            // ---------------- ADD COSTUME ----------------
+            const addModal = document.getElementById('addCostumeModal');
+            document.getElementById('openAddCostumeModal').onclick = () => addModal.style.display = 'block';
+            document.getElementById('closeAddCostumeModal').onclick = () => addModal.style.display = 'none';
 
-        // ---------------- ADD COSTUME ----------------
-        document.getElementById('addCostumeForm').addEventListener('submit', e => {
-            e.preventDefault();
+            // ---------------- ADD COSTUME ----------------F
+            document.getElementById('addCostumeForm').addEventListener('submit', e => {
+                e.preventDefault();
 
-            const formData = new FormData(e.target);
-            const loadingBar = document.getElementById('addLoadingBar');
-            const loadingFill = document.getElementById('addLoadingFill');
+                const formData = new FormData(e.target);
+                const loadingBar = document.getElementById('addLoadingBar');
+                const loadingFill = document.getElementById('addLoadingFill');
 
-            // Show loading bar
-            loadingBar.style.display = 'block';
-            loadingFill.style.width = '10%';
+                // Show loading bar
+                loadingBar.style.display = 'block';
+                loadingFill.style.width = '10%';
 
-            // Slowly animate to 70% while waiting for fetch
-            let progress = 10;
-            const interval = setInterval(() => {
-                if (progress < 70) {
-                    progress += 5;
-                    loadingFill.style.width = progress + "%";
-                }
-            }, 200);
+                // Slowly animate to 70% while waiting for fetch
+                let progress = 10;
+                const interval = setInterval(() => {
+                    if (progress < 70) {
+                        progress += 5;
+                        loadingFill.style.width = progress + "%";
+                    }
+                }, 200);
 
-            fetch('/admin/costumes', {
+                fetch('/admin/costumes', {
                     method: 'POST',
                     body: formData
                 })
-                .then(res => res.json())
-                .then(() => {
-                    // Finish loading animation
-                    clearInterval(interval);
-                    loadingFill.style.width = "100%";
-
-                    setTimeout(() => {
-                        loadingBar.style.display = 'none';
-                        loadingFill.style.width = "0%";
-                        location.reload();
-                    }, 300);
-                })
-                .catch(() => {
-                    clearInterval(interval);
-                    loadingFill.style.background = "red";
-                    loadingFill.style.width = "100%";
-
-                    setTimeout(() => {
-                        loadingFill.style.width = "0%";
-                        loadingBar.style.display = "none";
-                        alert("Failed to save costume. Try again.");
-                    }, 700);
-                });
-        });
-
- 
-        const modal = document.getElementById('costumeModal');
-        const closeBtn = document.getElementById('closeCostumeModal');
-
-        document.querySelectorAll('.view-costume-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                fetch(`/admin/costumes/${id}`)
                     .then(res => res.json())
-                    .then(data => {
-                        document.getElementById('costumeModalTitle').textContent = "Costume #" + data
-                            .id;
-                        document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
-                        document.getElementById('costumeModalReturned').textContent = data
-                            .date_returned ?? '—';
-                        document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
-                        document.getElementById('costumeModalComplied').textContent = data
-                            .date_complied ?? '—';
+                    .then(() => {
+                        // Finish loading animation
+                        clearInterval(interval);
+                        loadingFill.style.width = "100%";
 
-                        const reportSection = document.getElementById('lostReportSection');
-                        const imgContainer = document.getElementById('costumeReportImages');
-                        const costumeModalPreviewIMG = document.getElementById('costumeModalPreviewIMG');
-                        const detailContainer = document.getElementById('costumeReportDetail');
+                        setTimeout(() => {
+                            loadingBar.style.display = 'none';
+                            loadingFill.style.width = "0%";
+                            location.reload();
+                        }, 300);
+                    })
+                    .catch(() => {
+                        clearInterval(interval);
+                        loadingFill.style.background = "red";
+                        loadingFill.style.width = "100%";
 
-                        costumeModalPreviewIMG.innerHTML = '';
-                        imgContainer.innerHTML = '';
-                        detailContainer.textContent = '';
-
-                        if (data.status === 'lost') {
-                            reportSection.style.display = 'block';
-
-                            detailContainer.textContent = data.report_detail ?? '—';
-
-                            (data.report_img || []).forEach(img => {
-                                const image = document.createElement('img');
-                                image.src = `/${img}`;
-                                image.style.width = '100px';
-                                image.style.borderRadius = '6px';
-                                imgContainer.appendChild(image);
-                            });
-                        } else {
-                            reportSection.style.display = 'none';
-                            if (data.img) {
-
-                                const image = document.createElement('img');
-                                image.src = `/${data.img}`;
-                                image.style.width = '100px';
-                                image.style.borderRadius = '6px';
-                                costumeModalPreviewIMG.appendChild(image);
-                            }
-                        }
-
-                        modal.style.display = 'block';
+                        setTimeout(() => {
+                            loadingFill.style.width = "0%";
+                            loadingBar.style.display = "none";
+                            alert("Failed to save costume. Try again.");
+                        }, 700);
                     });
             });
-        });
 
-        closeBtn.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
+
+            const modal = document.getElementById('costumeModal');
+            const closeBtn = document.getElementById('closeCostumeModal');
+
+            document.querySelectorAll('.view-costume-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    fetch(`/admin/costumes/${id}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById('costumeModalTitle').textContent = "Costume #" + data
+                                .id;
+                            document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
+                            document.getElementById('costumeModalReturned').textContent = data
+                                .date_returned ?? '—';
+                            document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
+                            document.getElementById('costumeModalComplied').textContent = data
+                                .date_complied ?? '—';
+
+                            const reportSection = document.getElementById('lostReportSection');
+                            const imgContainer = document.getElementById('costumeReportImages');
+                            const costumeModalPreviewIMG = document.getElementById('costumeModalPreviewIMG');
+                            const detailContainer = document.getElementById('costumeReportDetail');
+
+                            costumeModalPreviewIMG.innerHTML = '';
+                            imgContainer.innerHTML = '';
+                            detailContainer.textContent = '';
+
+                            if (data.status === 'lost') {
+                                reportSection.style.display = 'block';
+
+                                detailContainer.textContent = data.report_detail ?? '—';
+
+                                (data.report_img || []).forEach(img => {
+                                    const image = document.createElement('img');
+                                    image.src = `/${img}`;
+                                    image.style.width = '100px';
+                                    image.style.borderRadius = '6px';
+                                    imgContainer.appendChild(image);
+                                });
+                            } else {
+                                reportSection.style.display = 'none';
+                                if (data.img) {
+
+                                    const image = document.createElement('img');
+                                    image.src = `/${data.img}`;
+                                    image.style.width = '100px';
+                                    image.style.borderRadius = '6px';
+                                    costumeModalPreviewIMG.appendChild(image);
+                                }
+                            }
+
+                            modal.style.display = 'block';
+                        });
+                });
+            });
+
+            closeBtn.addEventListener('click', () => modal.style.display = 'none');
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
         });
-    });
     </script>
 @endpush
