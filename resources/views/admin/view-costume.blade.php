@@ -115,61 +115,6 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // ---------------- ADD COSTUME ----------------
-            const addModal = document.getElementById('addCostumeModal');
-            document.getElementById('openAddCostumeModal').onclick = () => addModal.style.display = 'block';
-            document.getElementById('closeAddCostumeModal').onclick = () => addModal.style.display = 'none';
-
-            // ---------------- ADD COSTUME ----------------F
-            document.getElementById('addCostumeForm').addEventListener('submit', e => {
-                e.preventDefault();
-
-                const formData = new FormData(e.target);
-                const loadingBar = document.getElementById('addLoadingBar');
-                const loadingFill = document.getElementById('addLoadingFill');
-
-                // Show loading bar
-                loadingBar.style.display = 'block';
-                loadingFill.style.width = '10%';
-
-                // Slowly animate to 70% while waiting for fetch
-                let progress = 10;
-                const interval = setInterval(() => {
-                    if (progress < 70) {
-                        progress += 5;
-                        loadingFill.style.width = progress + "%";
-                    }
-                }, 200);
-
-                fetch('/admin/costumes', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(res => res.json())
-                    .then(() => {
-                        // Finish loading animation
-                        clearInterval(interval);
-                        loadingFill.style.width = "100%";
-
-                        setTimeout(() => {
-                            loadingBar.style.display = 'none';
-                            loadingFill.style.width = "0%";
-                            location.reload();
-                        }, 300);
-                    })
-                    .catch(() => {
-                        clearInterval(interval);
-                        loadingFill.style.background = "red";
-                        loadingFill.style.width = "100%";
-
-                        setTimeout(() => {
-                            loadingFill.style.width = "0%";
-                            loadingBar.style.display = "none";
-                            alert("Failed to save costume. Try again.");
-                        }, 700);
-                    });
-            });
-
 
             const modal = document.getElementById('costumeModal');
             const closeBtn = document.getElementById('closeCostumeModal');
@@ -177,6 +122,7 @@
             document.querySelectorAll('.view-costume-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
+                    console.log("click",id);
                     fetch(`/admin/costumes/${id}`)
                         .then(res => res.json())
                         .then(data => {
