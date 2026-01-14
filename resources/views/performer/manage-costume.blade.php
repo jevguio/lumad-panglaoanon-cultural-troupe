@@ -100,6 +100,8 @@
             <span class="close" id="closeCostumeModal">&times;</span>
             <h2 id="costumeModalTitle"></h2>
 
+            <p><b>Name:</b> <span id="costumeModalName"></span></p>
+            <p><b>Description:</b> <span id="costumeModalDescription"></span></p>
             <p><b>Status:</b> <span id="costumeModalStatus"></span></p>
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
@@ -190,6 +192,8 @@
         // -----------------------
         // VIEW COSTUME MODAL
         // -----------------------
+        
+        document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById('costumeModal');
         const closeBtn = document.getElementById('closeCostumeModal');
         const lostReportSection = document.getElementById('lostReportSection');
@@ -209,6 +213,8 @@
                 then(data => {
                     document.getElementById('costumeModalTitle').textContent = "Costume #" + data
                         .id;
+                    document.getElementById('costumeModalName').textContent = data.name ?? '—';
+                    document.getElementById('costumeModalDescription').textContent = data.description ?? '—';
                     document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
                     document.getElementById('costumeModalReturned').textContent = data
                         .date_returned ?? '—';
@@ -336,5 +342,6 @@
             if (e.target === modal) modal.style.display = 'none';
             if (e.target === actionModal) actionModal.style.display = 'none';
         };
+    });
     </script>
 @endpush
