@@ -13,7 +13,7 @@
                     <table class="table table-bordered mb-0">
                         <thead class="table-info">
                             <tr>
-                                <th>Event IDD</th>
+                                <th>Event ID</th>
                                 <th>Name</th>
                                 <th>Confirmation</th>
                             </tr>
@@ -21,10 +21,10 @@
                         <tbody>
                             @foreach ($event->selectedPerformers as $performer)
                                 <tr>
-                                    <td>Performer {{ $performer->id }}</td>
+                                    <td>Performer {{ $performer->user_id }}</td>
                                     <td>{{ $performer->name }}</td>
                                     <td>
-                                        <form action="{{ route('attendance.update', [$event->id, $performer->id]) }}"
+                                        <form action="{{ route('attendance.update', [$event->id, $performer->user_id]) }}"
                                             method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" name="status" value="present"

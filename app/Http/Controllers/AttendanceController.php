@@ -15,7 +15,7 @@ class AttendanceController extends Controller
 
         if (! in_array(auth()->user()->type, ['admin', 'manager'])) {
             $events = $events->map(function ($event) {
-                $event->selectedPerformers = $event->selectedPerformers->where('id', auth()->id());
+                $event->selectedPerformers = $event->selectedPerformers->where('user_id', auth()->id());
                 return $event;
             });
 
