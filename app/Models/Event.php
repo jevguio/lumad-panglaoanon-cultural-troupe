@@ -30,7 +30,7 @@ class Event extends Model
     public function performers()
     {
         return $this->belongsToMany(User::class, 'event_user')
-            ->withPivot(['status', 'attendance'])->where('attendance','!=','undefine')
+            ->withPivot(['status', 'attendance','event_id'])->where('attendance','!=','undefine')
             ->withTimestamps();
     }
 

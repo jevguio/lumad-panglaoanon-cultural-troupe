@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type', 
+        'type',
         'profile_img'
     ];
 
@@ -43,11 +43,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Costume::class, 'user_id');
     }
-    
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'event_user')
+            ->withPivot(['status', 'attendance', 'event_id'])
+            ->withTimestamps();
+    }
+
     public function attendedEvents()
     {
         return $this->belongsToMany(Event::class, 'event_user')
-            ->withPivot(['status','attendance'])
+            ->withPivot(['status', 'attendance'])
             ->withTimestamps();
     }
 

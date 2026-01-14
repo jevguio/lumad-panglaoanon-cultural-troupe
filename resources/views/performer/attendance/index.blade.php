@@ -16,6 +16,7 @@
                         <tr style="background-color:  #F2BB55;">
                             <th  style="background-color:  #F2BB55;">Performer ID</th>
                             <th style="background-color:  #F2BB55;">Name</th>
+                            <th style="background-color:  #F2BB55;">Event Name</th>
                             <th style="background-color:  #F2BB55;">Status</th>
                         </tr>
                     </thead>
@@ -24,8 +25,9 @@
                             @foreach ($event->performers as $performer)
                                 @if ($performer->id == Auth::user()->id)
                                     <tr style="background-color: #F2BB55;">
-                                        <td>Performer {{ $performer->id }}</td>
+                                        <td>{{ $performer->id }}</td>
                                         <td>{{ $performer->name }}</td>
+                                        <td>{{ $event->title }}</td>
                                        <td class="attendance {{ $performer->pivot->attendance }}">
                                             {{ ucfirst($performer->pivot->attendance) }}
                                         </td>
