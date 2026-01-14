@@ -11,7 +11,7 @@ class CostumeController extends Controller
 {
     public function index()
     {
-        $performers = User::with('costumes')->get();
+        $performers = User::with('costumes')->where('id','=', Auth::user()->id)->get();
         $costumes = Costume::whereDoesntHave('user')->get();
         $user = Auth::user();
         if (in_array($user->type, ['admin', 'manager'])) {
