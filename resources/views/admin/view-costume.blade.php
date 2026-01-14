@@ -54,6 +54,8 @@
             <span class="close" id="closeCostumeModal">&times;</span>
             <h2 id="costumeModalTitle"></h2>
 
+            <p><b>Name:</b> <span id="costumeModalName"></span></p>
+            <p><b>Description:</b> <span id="costumeModalDescription"></span></p>
             <p><b>Status:</b> <span id="costumeModalStatus"></span></p>
             <p><b>Date Returned:</b> <span id="costumeModalReturned"></span></p>
             <p><b>Date Lost:</b> <span id="costumeModalLost"></span></p>
@@ -128,7 +130,9 @@
                         .then(data => {
                             document.getElementById('costumeModalTitle').textContent = "Costume #" + data
                                 .id;
+                            document.getElementById('costumeModalName').textContent = data.status ?? '—';
                             document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
+                            document.getElementById('costumeModalDescription').textContent = data.status ?? '—';
                             document.getElementById('costumeModalReturned').textContent = data
                                 .date_returned ?? '—';
                             document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
