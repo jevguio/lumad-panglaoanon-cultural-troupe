@@ -50,6 +50,7 @@ class CostumeController extends Controller
             'description' => $req->description,
             'date_complied' => $req->date_received,
             'event_id' => $req->event_id,
+            'user_id' => Auth::user()->id,
             'status' =>  $req->status,
             'img' => $imagePath,
         ]);
