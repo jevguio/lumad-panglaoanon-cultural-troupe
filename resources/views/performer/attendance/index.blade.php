@@ -16,7 +16,7 @@
                     </thead>
                     <tbody>
                         @foreach ($events as $event)
-                            @foreach ($event->performers as $performer)
+                            @foreach ($event->selectedPerformers as $performer)
                                 @if ($performer->id == Auth::user()->id)
                                     <tr style="background-color: #F2BB55;">
                                         <td>Performer {{ $performer->id }}</td>
