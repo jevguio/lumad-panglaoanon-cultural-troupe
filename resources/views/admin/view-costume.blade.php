@@ -130,9 +130,9 @@
                         .then(data => {
                             document.getElementById('costumeModalTitle').textContent = "Costume #" + data
                                 .id;
-                            document.getElementById('costumeModalName').textContent = data.status ?? '—';
+                            document.getElementById('costumeModalName').textContent = data.name ?? '—';
                             document.getElementById('costumeModalStatus').textContent = data.status ?? '—';
-                            document.getElementById('costumeModalDescription').textContent = data.status ?? '—';
+                            document.getElementById('costumeModalDescription').textContent = data.description ?? '—';
                             document.getElementById('costumeModalReturned').textContent = data
                                 .date_returned ?? '—';
                             document.getElementById('costumeModalLost').textContent = data.date_lost ?? '—';
