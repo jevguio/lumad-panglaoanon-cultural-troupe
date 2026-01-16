@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const calendarEl = document.getElementById('calendar');
 
+    if (!calendarEl) return; // ✅ prevent FullCalendar crash
+    
     const calendar = new Calendar(calendarEl, {
         plugins: [dayGridPlugin],
         initialView: 'dayGridMonth',

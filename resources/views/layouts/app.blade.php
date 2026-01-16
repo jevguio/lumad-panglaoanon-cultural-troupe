@@ -41,8 +41,8 @@ error_reporting(E_ALL & ~E_DEPRECATED);
     @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-  <link rel="icon" type="image/x-icon" href="{{ asset('images/logo.png') }}">
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/logo.png') }}">
 
 </head>
 
@@ -57,7 +57,7 @@ error_reporting(E_ALL & ~E_DEPRECATED);
             @else
                 @include('partials.sidebar')
             @endif
-        @endauth
+    @endauth
         <div class="content @auth ml-20 shifted @endauth ">
 
             @if (request()->is('dashboard'))
@@ -108,8 +108,8 @@ error_reporting(E_ALL & ~E_DEPRECATED);
             </div>
         </div>
         @auth
-        </div>
-    @endauth
+            </div>
+        @endauth
     @if (session('success'))
         <div id="flash-message" class="flash-message">
             {{ session('success') }}
@@ -117,9 +117,10 @@ error_reporting(E_ALL & ~E_DEPRECATED);
     @endif
 
     <script>
-        let allData = [];
+        document.addEventListener("DOMContentLoaded", () => {
+            let allData = [];
 
-        fetch("{{ route('search.item') }}", {
+            fetch("{{ route('search.item') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -127,118 +128,122 @@ error_reporting(E_ALL & ~E_DEPRECATED);
                 },
                 body: JSON.stringify({})
             })
-            .then(res => res.json())
-            .then(data => {
-                allData = data.allData; 
-            });
+                .then(res => res.json())
+                .then(data => {
+                    allData = data.allData;
+                });
 
-        const input = document.getElementById('searchInput');
-        const resultsBox = document.getElementById('searchResults');
+            const input = document.getElementById('searchInput');
+            const resultsBox = document.getElementById('searchResults');
+            if (input) {
+                input.addEventListener('keyup', function () {
+                    let query = input.value.toString().toLowerCase();
 
-        input.addEventListener('keyup', function() {
-            let query = input.value.toString().toLowerCase();
+                    if (query.length < 1) {
+                        resultsBox.style.display = "none";
+                        return;
+                    }
+                    let filtered = allData.filter(item =>
+                        item.name ? item.name.toLowerCase().includes(query) : item.title ? item.title.toLowerCase()
+                            .includes(query) : item.venue ? item.venue.toLowerCase().includes(query) : item.type
+                                .toLowerCase().includes(query)
+                    );
 
-            if (query.length < 1) {
-                resultsBox.style.display = "none";
-                return;
-            }
-            let filtered = allData.filter(item =>
-                item.name ? item.name.toLowerCase().includes(query) : item.title ? item.title.toLowerCase()
-                .includes(query) : item.venue ? item.venue.toLowerCase().includes(query) : item.type
-                .toLowerCase().includes(query)
-            );
+                    resultsBox.innerHTML = "";
 
-            resultsBox.innerHTML = "";
-
-            if (filtered.length === 0) {
-                resultsBox.innerHTML = "<p>No results found.</p>";
-            } else {
-                filtered.forEach(item => {
-                    resultsBox.innerHTML += `
+                    if (filtered.length === 0) {
+                        resultsBox.innerHTML = "<p>No results found.</p>";
+                    } else {
+                        filtered.forEach(item => {
+                            resultsBox.innerHTML += `
                 <div style="display:flex; align-items:center; gap:12px; padding:8px; border-bottom:1px solid #eee; cursor:pointer;"
-                     onclick="window.location='/${item.type??item.status}s/view/${item.id}'">
+                     onclick="window.location='/${item.type ?? item.status}s/view/${item.id}'">
  
 
                     <div>
-                        <strong>${item.name??item.title}</strong>
-                        <p style="margin:0; font-size:12px; color:gray;">${item.type??item.status}</p>
+                        <strong>${item.name ?? item.title}</strong>
+                        <p style="margin:0; font-size:12px; color:gray;">${item.type ?? item.status}</p>
                     </div>
                 </div>
             `;
+                        });
+                    }
+
+                    resultsBox.style.display = "block";
                 });
             }
-
-            resultsBox.style.display = "block";
-        });
-        setTimeout(() => {
-            const flash = document.getElementById('flash-message');
-            if (flash) {
-                flash.style.opacity = '0';
-                setTimeout(() => flash.remove(), 500); // remove after fade
-            }
-        }, 4000);
-        document.querySelectorAll("#sidebarMenu li").forEach(item => {
-            item.addEventListener("click", function() {
-                document.querySelectorAll("#sidebarMenu li").forEach(li => li.classList.remove("active"));
-                this.classList.add("active");
-
-                const link = this.getAttribute("data-link");
-                if (link && link !== "#") {
-                    window.location.href = link;
+            setTimeout(() => {
+                const flash = document.getElementById('flash-message');
+                if (flash) {
+                    flash.style.opacity = '0';
+                    setTimeout(() => flash.remove(), 500); // remove after fade
                 }
+            }, 4000);
+            document.querySelectorAll("#sidebarMenu li").forEach(item => {
+                item.addEventListener("click", function () {
+                    document.querySelectorAll("#sidebarMenu li").forEach(li => li.classList.remove("active"));
+                    this.classList.add("active");
+
+                    const link = this.getAttribute("data-link");
+                    if (link && link !== "#") {
+                        window.location.href = link;
+                    }
+                });
             });
-        });
-        document.getElementById("toggleBtnOn").addEventListener("click", function() {
-            const sidebar = document.querySelector(".sidebar");
-            const container = document.querySelector(".container");
-            const logout = document.querySelector(".logout");
-            const targ = document.querySelector(".targ");
-            const targMenu = document.querySelector(".targMenu");
-            const head = document.getElementById("headProf");
-            const targ2 = document.querySelector(".targ2");
-            const toggleBtnOn = document.querySelector("#toggleBtnOn");
+            const toggleBTN = document.getElementById("toggleBtnOn");
+            if (toggleBTN) {
+                toggleBTN.addEventListener("click", function () {
+                    const sidebar = document.querySelector(".sidebar");
+                    const container = document.querySelector(".container");
+                    const logout = document.querySelector(".logout");
+                    const targ = document.querySelector(".targ");
+                    const targMenu = document.querySelector(".targMenu");
+                    const head = document.getElementById("headProf");
+                    const targ2 = document.querySelector(".targ2");
+                    const toggleBtnOn = document.querySelector("#toggleBtnOn");
 
-            targ2.classList.toggle("hidden");
-            logout.classList.toggle("hidden");
-            targ.classList.toggle("hidden");
-            targMenu.classList.toggle("hidden");
-            head.classList.toggle("hidden");
-            if (head.style.display == "flex") {
-                head.style.display = "none"
-            } else {
-                head.style.display = "flex"
+                    targ2.classList.toggle("hidden");
+                    logout.classList.toggle("hidden");
+                    targ.classList.toggle("hidden");
+                    targMenu.classList.toggle("hidden");
+                    head.classList.toggle("hidden");
+                    if (head.style.display == "flex") {
+                        head.style.display = "none"
+                    } else {
+                        head.style.display = "flex"
+                    }
+                    sidebar.classList.toggle("collapsed");
+                    container.classList.toggle("shifted");
+                    toggleBtnOn.classList.toggle("hidden");
+                    console.log(toggleBtnOn);
+                });
             }
-            sidebar.classList.toggle("collapsed");
-            container.classList.toggle("shifted");
-            toggleBtnOn.classList.toggle("hidden");
-            console.log(toggleBtnOn);
-        });
+            function toggleBtnOff() {
+                const sidebar = document.querySelector(".sidebar");
+                const toggleBtnOn = document.querySelector("#toggleBtnOn");
+                const container = document.querySelector(".container");
+                const logout = document.querySelector(".logout");
+                const targ = document.querySelector(".targ");
+                const targMenu = document.querySelector(".targMenu");
+                const head = document.getElementById("headProf");
+                const targ2 = document.querySelector(".targ2");
 
-        function toggleBtnOff() {
-            const sidebar = document.querySelector(".sidebar");
-            const toggleBtnOn = document.querySelector("#toggleBtnOn");
-            const container = document.querySelector(".container");
-            const logout = document.querySelector(".logout");
-            const targ = document.querySelector(".targ");
-            const targMenu = document.querySelector(".targMenu");
-            const head = document.getElementById("headProf");
-            const targ2 = document.querySelector(".targ2");
-
-            targ2.classList.toggle("hidden");
-            logout.classList.toggle("hidden");
-            targ.classList.toggle("hidden");
-            targMenu.classList.toggle("hidden");
-            head.classList.toggle("hidden");
-            if (head.style.display == "flex") {
-                head.style.display = "none"
-            } else {
-                head.style.display = "flex"
+                targ2.classList.toggle("hidden");
+                logout.classList.toggle("hidden");
+                targ.classList.toggle("hidden");
+                targMenu.classList.toggle("hidden");
+                head.classList.toggle("hidden");
+                if (head.style.display == "flex") {
+                    head.style.display = "none"
+                } else {
+                    head.style.display = "flex"
+                }
+                sidebar.classList.toggle("collapsed");
+                container.classList.toggle("shifted");
+                toggleBtnOn.classList.toggle("hidden");
+                console.log(toggleBtnOn);
             }
-            sidebar.classList.toggle("collapsed");
-            container.classList.toggle("shifted");
-            toggleBtnOn.classList.toggle("hidden");
-            console.log(toggleBtnOn);
-        }
+        })
     </script>
 
     @stack('scripts')
